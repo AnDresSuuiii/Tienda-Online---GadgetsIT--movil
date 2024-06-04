@@ -5,7 +5,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import WelcomeScreen from "../screens/WelcomeScreen";
-import RecipeListScreen from "../screens/RecipeListScreen";
+import RecipeListScreen from "../screens/Marca";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -18,7 +18,7 @@ const RecipeListTabNavigator = () => {
           let iconName;
 
           if (route.name === "RecipeList") {
-            iconName = "list-outline";
+            iconName = "home-outline";
           }
 
           return <Ionicons name={iconName} size={size} color={color} />;
