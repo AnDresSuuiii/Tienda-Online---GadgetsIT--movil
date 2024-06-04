@@ -1,18 +1,19 @@
 import React from "react";
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 
-const WelcomeScreen = () => {
+const WelcomeScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Image source={require("../../assets/images/spla.png")} style={styles.image} />
 
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity  
+        onPress={() => navigation.navigate("RecipeListTab")}
+        style={styles.button}>
         <Text style={styles.buttonText}>
           Siguiente
         </Text>
       </TouchableOpacity>
     </View>
-    
   );
 };
 
