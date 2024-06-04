@@ -12,6 +12,7 @@ const WelcomeScreen = () => {
         </Text>
       </TouchableOpacity>
     </View>
+    
   );
 };
 
