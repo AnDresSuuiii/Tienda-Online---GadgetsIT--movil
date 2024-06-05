@@ -5,7 +5,8 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import WelcomeScreen from "../screens/WelcomeScreen";
-import RecipeListScreen from "../screens/Marca";
+import Marca from "../screens/Marca";
+import Categoria from "../screens/categoria"; 
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -17,8 +18,10 @@ const RecipeListTabNavigator = () => {
         tabBarIcon: ({ color, size }) => {
           let iconName;
 
-          if (route.name === "RecipeList") {
+          if (route.name === "Marca") {
             iconName = "home-outline";
+          } else if (route.name === "Categoria") {
+            iconName = "list-outline";
           }
 
           return <Ionicons name={iconName} size={size} color={color} />;
@@ -31,8 +34,13 @@ const RecipeListTabNavigator = () => {
       })}
     >
       <Tab.Screen 
-        name="RecipeList" 
-        component={RecipeListScreen} 
+        name="Marca" 
+        component={Marca} 
+        options={{ headerShown: false }}
+      />
+      <Tab.Screen 
+        name="Categoria" 
+        component={Categoria} 
         options={{ headerShown: false }}
       />
     </Tab.Navigator>
@@ -45,6 +53,8 @@ const AppNavigator = () => {
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Welcome" component={WelcomeScreen} />
         <Stack.Screen name="RecipeListTab" component={RecipeListTabNavigator} />
+        <Stack.Screen name="Marca" component={Marca} />
+        <Stack.Screen name="Categoria" component={Categoria} />
       </Stack.Navigator>
     </NavigationContainer>
   );
