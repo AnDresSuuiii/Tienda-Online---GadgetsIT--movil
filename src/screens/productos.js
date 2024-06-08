@@ -2,9 +2,9 @@ import React from "react";
 import { StyleSheet, SafeAreaView, Text, ScrollView } from "react-native";
 import Header from "../components/Header";
 import Search from "../components/Search";
-import BrandCard from "../components/cards";
+import BrandCard from "../components/cards_productos";
 
-const Categoria = ({ navigation }) => {
+const Productos = ({ navigation }) => {
     const headerText = "Hola, Andres";
     const headerIcon = "shopping-cart";
     const searchIcon = "search";
@@ -15,20 +15,20 @@ const Categoria = ({ navigation }) => {
     };
 
     const handleCardPress = () => {
-        navigation.navigate("productos");
+        navigation.navigate("producto");
     };
 
     return (
         <SafeAreaView style={styles.container}>
             <Header headerText={headerText} headerIcon={headerIcon} onIconPress={handleIconPress} />
             <Search icon={searchIcon} placeholder={searchPlaceholder} />
-            <Text style={styles.title}>Marcas</Text>
+            <Text style={styles.title}>Porductos</Text>
             <ScrollView contentContainerStyle={styles.cardsContainer}>
-                <BrandCard brandName="HUAWEI" brandLogo={require('../../assets/images/cool.png')} onPress={handleCardPress} />
-                <BrandCard brandName="COOLER MASTER" brandLogo={require('../../assets/images/hua.png')} onPress={handleCardPress} />
-                <BrandCard brandName="COOLER MASTER" brandLogo={require('../../assets/images/cool.png')} onPress={handleCardPress} />
-                <BrandCard brandName="COOLER MASTER" brandLogo={require('../../assets/images/cool.png')} onPress={handleCardPress} />
-                <BrandCard brandName="COOLER MASTER" brandLogo={require('../../assets/images/cool.png')} onPress={handleCardPress} />
+                <BrandCard brandName="HUAWEI" brandLogo={require('../../assets/images/ps.png')} onPress={handleCardPress} />
+                <BrandCard brandName="COOLER MASTER" brandLogo={require('../../assets/images/Image.png')} onPress={handleCardPress} />
+                <BrandCard brandName="COOLER MASTER" brandLogo={require('../../assets/images/ps.png')} onPress={handleCardPress} />
+                <BrandCard brandName="COOLER MASTER" brandLogo={require('../../assets/images/Image.png')} onPress={handleCardPress} />
+                <BrandCard brandName="COOLER MASTER" brandLogo={require('../../assets/images/ps.png')} onPress={handleCardPress} />
             </ScrollView>
         </SafeAreaView>
     );
@@ -55,4 +55,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default Categoria;
+export default Productos;

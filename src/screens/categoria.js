@@ -1,14 +1,8 @@
 import React from "react";
-import { StyleSheet, SafeAreaView, Text, View, ScrollView, Button } from "react-native";
+import { StyleSheet, SafeAreaView, Text, ScrollView } from "react-native";
 import Header from "../components/Header";
 import Search from "../components/Search";
 import BrandCard from "../components/cards";
-
-const huaweiLogo = require('../../assets/images/cool.png');
-const coolerMasterLogo = require('../../assets/images/hua.png');
-const coolerMasterLogoo = require('../../assets/images/cool.png');
-const coolerMasterLogooo = require('../../assets/images/cool.png');
-const coolerMasterLogoooo = require('../../assets/images/cool.png');
 
 const Categoria = ({ navigation }) => {
     const headerText = "Hola, Andres";
@@ -20,19 +14,22 @@ const Categoria = ({ navigation }) => {
         console.log("Carrito de compras presionado");
     };
 
+    const handleCardPress = () => {
+        navigation.navigate("productos");
+    };
+
     return (
         <SafeAreaView style={styles.container}>
             <Header headerText={headerText} headerIcon={headerIcon} onIconPress={handleIconPress} />
             <Search icon={searchIcon} placeholder={searchPlaceholder} />
             <Text style={styles.title}>Categorías</Text>
             <ScrollView contentContainerStyle={styles.cardsContainer}>
-                <BrandCard brandName="HUAWEI" brandLogo={huaweiLogo} />
-                <BrandCard brandName="COOLER MASTER" brandLogo={coolerMasterLogo} />
-                <BrandCard brandName="COOLER MASTER" brandLogo={coolerMasterLogoo} />
-                <BrandCard brandName="COOLER MASTER" brandLogo={coolerMasterLogooo} />
-                <BrandCard brandName="COOLER MASTER" brandLogo={coolerMasterLogoooo} />
+                <BrandCard brandName="HUAWEI" brandLogo={require('../../assets/images/cool.png')} onPress={handleCardPress} />
+                <BrandCard brandName="COOLER MASTER" brandLogo={require('../../assets/images/hua.png')} onPress={handleCardPress} />
+                <BrandCard brandName="COOLER MASTER" brandLogo={require('../../assets/images/cool.png')} onPress={handleCardPress} />
+                <BrandCard brandName="COOLER MASTER" brandLogo={require('../../assets/images/cool.png')} onPress={handleCardPress} />
+                <BrandCard brandName="COOLER MASTER" brandLogo={require('../../assets/images/cool.png')} onPress={handleCardPress} />
             </ScrollView>
-           
         </SafeAreaView>
     );
 };
