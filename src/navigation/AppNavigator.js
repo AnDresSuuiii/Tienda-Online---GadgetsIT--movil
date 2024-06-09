@@ -6,10 +6,12 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import WelcomeScreen from "../screens/WelcomeScreen";
 import Marca from "../screens/Marca";
-import Categoria from "../screens/categoria";
-import productos from "../screens/productos"; 
-import producto from "../screens/poroducto_detalle"; 
+import Categoria from "../screens/Categoria";
+import Productos from "../screens/Productos"; 
+import ProductoDetalle from "../screens/Poroducto_detalle"; 
 
+import Carrito from "../screens/Carrito"; 
+import Login from "../screens/Login"; 
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -58,8 +60,10 @@ const AppNavigator = () => {
         <Stack.Screen name="RecipeListTab" component={RecipeListTabNavigator} />
         <Stack.Screen name="Marca" component={Marca} />
         <Stack.Screen name="Categoria" component={Categoria} />
-        <Stack.Screen name="productos" component={productos} />
-        <Stack.Screen name="producto" component={producto} />
+        <Stack.Screen name="Productos" component={Productos} />
+        <Stack.Screen name="ProductoDetalle" component={ProductoDetalle} />
+        <Stack.Screen name="Carrito" component={Carrito} />
+        <Stack.Screen name="Login" component={Login} />
       </Stack.Navigator>
     </NavigationContainer>
   );

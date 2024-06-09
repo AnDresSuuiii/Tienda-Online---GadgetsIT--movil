@@ -4,19 +4,20 @@ import Header from "../components/Header";
 import Search from "../components/Search";
 import BrandCard from "../components/cards";
 
-const Categoria = ({ navigation }) => {
+const Marca = ({ navigation }) => {
     const headerText = "Hola, Andres";
     const headerIcon = "shopping-cart";
     const searchIcon = "search";
     const searchPlaceholder = "Apple Watch, Macbook Pro, ...";
 
     const handleIconPress = () => {
-        console.log("Carrito de compras presionado");
+        navigation.navigate("Carrito");
     };
 
     const handleCardPress = () => {
-        navigation.navigate("productos");
+        navigation.navigate("Productos"); // Use "Productos" instead of "productos"
     };
+    
 
     return (
         <SafeAreaView style={styles.container}>
@@ -55,4 +56,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default Categoria;
+export default Marca;

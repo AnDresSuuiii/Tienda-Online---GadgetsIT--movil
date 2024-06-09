@@ -11,16 +11,17 @@ const Categoria = ({ navigation }) => {
     const searchPlaceholder = "Apple Watch, Macbook Pro, ...";
 
     const handleIconPress = () => {
-        console.log("Carrito de compras presionado");
+        navigation.navigate("Carrito");
     };
 
     const handleCardPress = () => {
-        navigation.navigate("productos");
+        navigation.navigate("Productos");
     };
 
     return (
         <SafeAreaView style={styles.container}>
             <Header headerText={headerText} headerIcon={headerIcon} onIconPress={handleIconPress} />
+
             <Search icon={searchIcon} placeholder={searchPlaceholder} />
             <Text style={styles.title}>Categorías</Text>
             <ScrollView contentContainerStyle={styles.cardsContainer}>

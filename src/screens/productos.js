@@ -11,11 +11,12 @@ const Productos = ({ navigation }) => {
     const searchPlaceholder = "Apple Watch, Macbook Pro, ...";
 
     const handleIconPress = () => {
-        console.log("Carrito de compras presionado");
+        navigation.navigate("Carrito");
     };
 
+    
     const handleCardPress = () => {
-        navigation.navigate("producto");
+        navigation.navigate("ProductoDetalle"); // Use "Productos" instead of "productos"
     };
 
     return (

@@ -5,6 +5,11 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 const ProductoDetalle = ({ navigation }) => {
     const [inputText, setInputText] = useState('');
 
+    const handleIconPress = () => {
+        navigation.navigate("Carrito");
+    };
+
+
     const handleBackPress = () => {
         navigation.goBack();
     };
@@ -31,11 +36,10 @@ const ProductoDetalle = ({ navigation }) => {
                     hasta este momento. Además, ahora puedes elegir combinaciones de cajas y correas neutras en carbono.
                 </Text>
 
-                <TouchableOpacity style={styles.cartButton}>
+                <TouchableOpacity style={styles.cartButton} onPress={handleIconPress}>
                     <Ionicons name="cart" size={24} color="#333" />
                     <Text style={styles.cartButtonText}>Añadir al carrito</Text>
                 </TouchableOpacity>
-
                 <View style={styles.divider} />
 
                 <Text style={styles.reviewsTitle}>Sobre este artículo</Text>
