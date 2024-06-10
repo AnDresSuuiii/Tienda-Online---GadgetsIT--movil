@@ -7,7 +7,7 @@ const WelcomeScreen = ({ navigation }) => {
       <Image source={require("../../assets/images/spla.png")} style={styles.image} />
 
       <TouchableOpacity  
-        onPress={() => navigation.navigate("RecipeListTab")}
+        onPress={() => navigation.navigate("Login")}
         style={styles.button}>
         <Text style={styles.buttonText}>
           Siguiente

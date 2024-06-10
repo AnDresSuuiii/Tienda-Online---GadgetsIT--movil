@@ -1,29 +1,18 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 
-const Login = ({ 
+const Recuperacion_correo = ({
     navigation,
     titleText = "GADGETSIT",
-    subtitleText = "Iniciar sesión",
+    subtitleText = "Recuperar cuenta",
     emailPlaceholder = "Correo",
-    passwordPlaceholder = "Contraseña",
-    continueButtonText = "Continuar", 
-    forgotPasswordText = "¿Olvidaste tu contraseña?", 
-    createAccountText = "¿No tienes cuenta? Crear cuenta"
+    continueButtonText = "Enviar",
 }) => {
     const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
 
-    const handleLogin = () => {
-        navigation.navigate('RecipeListTab');
-    };
-
-    const createAccount = () => {
-        navigation.navigate('Crear_cuenta');
-    };
-
-    const Password = () => {
-        navigation.navigate('Recuperacion_correo');
+    const handleRecover = () => {
+        // Lógica para recuperar la cuenta
+        navigation.navigate('Recuperacion_codigo');
     };
 
     return (
@@ -37,26 +26,9 @@ const Login = ({
                 value={email}
                 onChangeText={setEmail}
             />
-            <TextInput
-                style={styles.input}
-                placeholder={passwordPlaceholder}
-                placeholderTextColor="#777"
-                secureTextEntry
-                value={password}
-                onChangeText={setPassword}
-            />
-            <TouchableOpacity style={styles.continueButton} onPress={handleLogin}>
+            <TouchableOpacity style={styles.continueButton} onPress={handleRecover}>
                 <Text style={styles.continueButtonText}>{continueButtonText}</Text>
             </TouchableOpacity>
-
-            <TouchableOpacity>
-                <Text style={styles.forgotPassword} onPress={Password}>{forgotPasswordText}</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity>
-                <Text style={styles.createAccount} onPress={createAccount}>{createAccountText}</Text>
-            </TouchableOpacity>
-
         </View>
     );
 };
@@ -70,13 +42,13 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
     },
     title: {
-        color: '#ffff',
+        color: '#fff',
         fontSize: 36,
         fontWeight: 'bold',
         marginBottom: 10,
     },
     subtitle: {
-        color: '#ffff',
+        color: '#fff',
         fontSize: 20,
         marginBottom: 30,
     },
@@ -91,26 +63,17 @@ const styles = StyleSheet.create({
         fontSize: 16,
     },
     continueButton: {
-        backgroundColor: '#ffff',
+        backgroundColor: '#fff',
         paddingVertical: 15,
         paddingHorizontal: 40,
         borderRadius: 25,
-        marginBottom: 15,
+        marginTop: 15,
     },
     continueButtonText: {
         color: '#1e1e1e',
         fontWeight: 'bold',
         fontSize: 18,
     },
-    forgotPassword: {
-        color: '#fff',
-        marginBottom: 15,
-        textDecorationLine: 'underline',
-    },
-    createAccount: {
-        color: '#fff',
-        textDecorationLine: 'underline',
-    },
 });
 
-export default Login;
+export default Recuperacion_correo;

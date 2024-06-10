@@ -1,35 +1,47 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 
-const Login = ({ 
+const Crear_cuenta = ({
     navigation,
     titleText = "GADGETSIT",
-    subtitleText = "Iniciar sesión",
+    subtitleText = "Crear cuenta",
+    firstNamePlaceholder = "Nombre",
+    lastNamePlaceholder = "Apellido",
     emailPlaceholder = "Correo",
+    phonePlaceholder = "Teléfono",
     passwordPlaceholder = "Contraseña",
-    continueButtonText = "Continuar", 
-    forgotPasswordText = "¿Olvidaste tu contraseña?", 
-    createAccountText = "¿No tienes cuenta? Crear cuenta"
+    confirmpasswordPlaceholder = "Confirmar contraseña",
+    continueButtonText = "Registrarse",
 }) => {
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
+    const [phone, setPhone] = useState('');
     const [password, setPassword] = useState('');
 
-    const handleLogin = () => {
-        navigation.navigate('RecipeListTab');
-    };
-
-    const createAccount = () => {
-        navigation.navigate('Crear_cuenta');
-    };
-
-    const Password = () => {
-        navigation.navigate('Recuperacion_correo');
+    const handleRegister = () => {
+        // Lógica para registrarse
+        navigation.navigate('Login');
     };
 
     return (
         <View style={styles.container}>
             <Text style={styles.title}>{titleText}</Text>
             <Text style={styles.subtitle}>{subtitleText}</Text>
+            <TextInput
+                style={styles.input}
+                placeholder={firstNamePlaceholder}
+                placeholderTextColor="#777"
+                value={firstName}
+                onChangeText={setFirstName}
+            />
+            <TextInput
+                style={styles.input}
+                placeholder={lastNamePlaceholder}
+                placeholderTextColor="#777"
+                value={lastName}
+                onChangeText={setLastName}
+            />
             <TextInput
                 style={styles.input}
                 placeholder={emailPlaceholder}
@@ -39,22 +51,31 @@ const Login = ({
             />
             <TextInput
                 style={styles.input}
+                placeholder={phonePlaceholder}
+                placeholderTextColor="#777"
+                value={phone}
+                onChangeText={setPhone}
+            />
+            <TextInput
+                style={styles.input}
                 placeholder={passwordPlaceholder}
                 placeholderTextColor="#777"
                 secureTextEntry
                 value={password}
                 onChangeText={setPassword}
             />
-            <TouchableOpacity style={styles.continueButton} onPress={handleLogin}>
+
+            <TextInput
+                style={styles.input}
+                placeholder={confirmpasswordPlaceholder}
+                placeholderTextColor="#777"
+                secureTextEntry
+                value={password}
+                onChangeText={setPassword}
+            />
+
+            <TouchableOpacity style={styles.continueButton} onPress={handleRegister}>
                 <Text style={styles.continueButtonText}>{continueButtonText}</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity>
-                <Text style={styles.forgotPassword} onPress={Password}>{forgotPasswordText}</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity>
-                <Text style={styles.createAccount} onPress={createAccount}>{createAccountText}</Text>
             </TouchableOpacity>
 
         </View>
@@ -95,22 +116,17 @@ const styles = StyleSheet.create({
         paddingVertical: 15,
         paddingHorizontal: 40,
         borderRadius: 25,
-        marginBottom: 15,
+        marginTop: 15,
     },
     continueButtonText: {
         color: '#1e1e1e',
         fontWeight: 'bold',
         fontSize: 18,
     },
-    forgotPassword: {
-        color: '#fff',
-        marginBottom: 15,
-        textDecorationLine: 'underline',
-    },
-    createAccount: {
+    alreadyHaveAccount: {
         color: '#fff',
         textDecorationLine: 'underline',
     },
 });
 
-export default Login;
+export default Crear_cuenta;
