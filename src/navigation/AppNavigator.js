@@ -16,6 +16,7 @@ import Recuperacion_correo from "../screens/Recuperacion_correo";
 import Recuperacion_codigo from "../screens/Recuperacion_codigo"; 
 import Recuperacion_contraseña from "../screens/Recuperacion_contraseña"; 
 import Editar_perfil from "../screens/Editar_perfil"; 
+import Historial from "../screens/Historial"; 
 
 
 
@@ -36,6 +37,8 @@ const RecipeListTabNavigator = () => {
           }
           else if (route.name === "Perfil") {
             iconName = "person-outline";
+          } else if (route.name === "Historial") {
+            iconName = "clipboard-outline";
           }
 
           return <Ionicons name={iconName} size={size} color={color} />;
@@ -62,6 +65,12 @@ const RecipeListTabNavigator = () => {
         component={Editar_perfil} 
         options={{ headerShown: false }}
       />
+      <Tab.Screen 
+        name="Historial" 
+        component={Historial} 
+        options={{ headerShown: false }}
+      />
+
     </Tab.Navigator>
   );
 };
@@ -84,6 +93,7 @@ const AppNavigator = () => {
         <Stack.Screen name="ProductoDetalle" component={ProductoDetalle} />
         <Stack.Screen name="Carrito" component={Carrito} />
         <Stack.Screen name="Editar_perfil" component={Editar_perfil} />
+        <Stack.Screen name="Historial" component={Historial} />
 
       </Stack.Navigator>
     </NavigationContainer>
