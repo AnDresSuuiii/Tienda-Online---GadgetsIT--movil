@@ -1,35 +1,54 @@
-import React from "react";
-import { StyleSheet, SafeAreaView, Text, ScrollView } from "react-native";
+import React, { useEffect, useState } from "react";
+import { StyleSheet, SafeAreaView, Text, ScrollView, Alert } from "react-native";
 import Header from "../components/Header";
 import Search from "../components/Search";
-import BrandCard from "../components/cards";
+import BrandCard from "../components/cards"; // Asegúrate de que el import sea correcto
+import * as Constantes from '../utils/constantes';
 
 const Marca = ({ navigation }) => {
-    const headerText = "Hola, Andres";
-    const headerIcon = "shopping-cart";
-    const searchIcon = "search";
-    const searchPlaceholder = "Apple Watch, Macbook Pro, ...";
+    const ip = Constantes.IP;
+    const [marcas, setMarcas] = useState([]);
 
-    const handleIconPress = () => {
-        navigation.navigate("Carrito");
+    useEffect(() => {
+        getMarcas();
+    }, []);
+
+    const getMarcas = async () => {
+        try {
+            const response = await fetch(`${ip}/Tienda-Online---GadgetsIT/api/services/public/marca.php?action=readAll`, {
+                method: 'GET',
+            });
+            const data = await response.json();
+            if (data.status) {
+                setMarcas(data.dataset);
+            } else {
+                console.error('Error al obtener marcas:', data.error);
+                Alert.alert('Error', 'No se pudieron cargar las marcas');
+            }
+        } catch (error) {
+            console.error('Error desde Catch:', error);
+            Alert.alert('Error', 'Ocurrió un error al conectar con el servidor');
+        }
     };
 
-    const handleCardPress = () => {
-        navigation.navigate("Productos"); // Use "Productos" instead of "productos"
+    const handleCardPress = (idMarca) => {
+        navigation.navigate("Productos", { idMarca });
     };
-    
 
     return (
         <SafeAreaView style={styles.container}>
-            <Header headerText={headerText} headerIcon={headerIcon} onIconPress={handleIconPress} />
-            <Search icon={searchIcon} placeholder={searchPlaceholder} />
+            <Header headerText="Hola, Andrés" headerIcon="shopping-cart" onIconPress={() => navigation.navigate("Carrito")} />
+            <Search icon="search" placeholder="Apple Watch, Macbook Pro, ..." />
             <Text style={styles.title}>Marcas</Text>
             <ScrollView contentContainerStyle={styles.cardsContainer}>
-                <BrandCard brandName="HUAWEI" brandLogo={require('../../assets/images/cool.png')} onPress={handleCardPress} />
-                <BrandCard brandName="COOLER MASTER" brandLogo={require('../../assets/images/hua.png')} onPress={handleCardPress} />
-                <BrandCard brandName="COOLER MASTER" brandLogo={require('../../assets/images/cool.png')} onPress={handleCardPress} />
-                <BrandCard brandName="COOLER MASTER" brandLogo={require('../../assets/images/cool.png')} onPress={handleCardPress} />
-                <BrandCard brandName="COOLER MASTER" brandLogo={require('../../assets/images/cool.png')} onPress={handleCardPress} />
+                {marcas.map(marca => (
+                    <BrandCard
+                        key={marca.id}
+                        brandName={marca.nombre_marca}
+                        brandLogo={{ uri: `${ip}${'/Tienda-Online---GadgetsIT/api/images/marcas/'}${marca.imagen_marca}` }}
+                        onPress={() => handleCardPress(marca.id)}
+                    />
+                ))}
             </ScrollView>
         </SafeAreaView>
     );

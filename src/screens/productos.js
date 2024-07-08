@@ -1,35 +1,56 @@
-import React from "react";
-import { StyleSheet, SafeAreaView, Text, ScrollView } from "react-native";
+import React, { useEffect, useState } from "react";
+import { StyleSheet, SafeAreaView, Text, ScrollView, Alert } from "react-native";
 import Header from "../components/Header";
 import Search from "../components/Search";
 import BrandCard from "../components/cards_productos";
+import * as Constantes from '../utils/constantes';
 
-const Productos = ({ navigation }) => {
-    const headerText = "Hola, Andres";
-    const headerIcon = "shopping-cart";
-    const searchIcon = "search";
-    const searchPlaceholder = "Apple Watch, Macbook Pro, ...";
+const Productos = ({ route, navigation }) => {
+    const { idMarca, idCategoria } = route.params;
+    const [productos, setProductos] = useState([]);
 
-    const handleIconPress = () => {
-        navigation.navigate("Carrito");
+    useEffect(() => {
+        obtenerProductos(idMarca, idCategoria);
+    }, [idMarca, idCategoria]);
+
+    const obtenerProductos = async (idMarca, idCategoria) => {
+        const ip = Constantes.IP;
+        try {
+            let url = `${ip}/Tienda-Online---GadgetsIT/api/services/public/producto.php?action=readProductos`;
+            if (idMarca) url += `&idMarca=${idMarca}`;
+            if (idCategoria) url += `&idCategoria=${idCategoria}`;
+
+            const response = await fetch(url);
+            const data = await response.json();
+            if (data.status) {
+                setProductos(data.dataset);
+            } else {
+                Alert.alert("Error", "No se encontraron productos");
+            }
+        } catch (error) {
+            console.error('Error desde Catch:', error);
+            Alert.alert("Error", "Ocurrió un error al conectar con el servidor");
+        }
     };
 
-    
-    const handleCardPress = () => {
-        navigation.navigate("ProductoDetalle"); // Use "Productos" instead of "productos"
+    const handleCardPress = (idProducto) => {
+        navigation.navigate("ProductoDetalle", { idProducto });
     };
 
     return (
         <SafeAreaView style={styles.container}>
-            <Header headerText={headerText} headerIcon={headerIcon} onIconPress={handleIconPress} />
-            <Search icon={searchIcon} placeholder={searchPlaceholder} />
-            <Text style={styles.title}>Porductos</Text>
+            <Header headerText="Hola, Andrés" headerIcon="shopping-cart" onIconPress={() => navigation.navigate("Carrito")} />
+            <Search icon="search" placeholder="Apple Watch, Macbook Pro, ..." />
+            <Text style={styles.title}>Productos</Text>
             <ScrollView contentContainerStyle={styles.cardsContainer}>
-                <BrandCard brandName="HUAWEI" brandLogo={require('../../assets/images/ps.png')} onPress={handleCardPress} />
-                <BrandCard brandName="COOLER MASTER" brandLogo={require('../../assets/images/Image.png')} onPress={handleCardPress} />
-                <BrandCard brandName="COOLER MASTER" brandLogo={require('../../assets/images/ps.png')} onPress={handleCardPress} />
-                <BrandCard brandName="COOLER MASTER" brandLogo={require('../../assets/images/Image.png')} onPress={handleCardPress} />
-                <BrandCard brandName="COOLER MASTER" brandLogo={require('../../assets/images/ps.png')} onPress={handleCardPress} />
+                {productos.map((producto) => (
+                    <BrandCard
+                        key={producto.id}
+                        brandName={producto.nombre}
+                        brandLogo={{ uri: `${Constantes.IP}/images/productos/${producto.imagen}` }}
+                        onPress={() => handleCardPress(producto.id)}
+                    />
+                ))}
             </ScrollView>
         </SafeAreaView>
     );

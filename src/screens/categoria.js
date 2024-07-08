@@ -1,35 +1,54 @@
-import React from "react";
-import { StyleSheet, SafeAreaView, Text, ScrollView } from "react-native";
-import Header from "../components/Header";
-import Search from "../components/Search";
-import BrandCard from "../components/cards";
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, SafeAreaView, Text, ScrollView, TouchableOpacity, Alert } from 'react-native';
+import Header from '../components/Header';
+import Search from '../components/Search';
+import BrandCard from '../components/cards'; // Ensure this import is correctly pointing to your BrandCard component
+import * as Constantes from '../utils/constantes';
 
 const Categoria = ({ navigation }) => {
-    const headerText = "Hola, Andres";
-    const headerIcon = "shopping-cart";
-    const searchIcon = "search";
-    const searchPlaceholder = "Apple Watch, Macbook Pro, ...";
+    const ip = Constantes.IP;
+    const [categorias, setCategorias] = useState([]);
 
-    const handleIconPress = () => {
-        navigation.navigate("Carrito");
+    useEffect(() => {
+        getCategorias();
+    }, []);
+
+    const getCategorias = async () => {
+        try {
+            const response = await fetch(`${ip}/Tienda-Online---GadgetsIT/api/services/public/categoria.php?action=readAll`, {
+                method: 'GET'
+            });
+            const data = await response.json();
+            if (data.status) {
+                setCategorias(data.dataset);
+            } else {
+                console.error('Error al obtener categorías:', data.error);
+                Alert.alert('Error', 'No se pudieron cargar las categorías');
+            }
+        } catch (error) {
+            console.error('Error desde Catch:', error);
+            Alert.alert('Error', 'Ocurrió un error al conectar con el servidor');
+        }
     };
 
-    const handleCardPress = () => {
-        navigation.navigate("Productos");
+    const handleCardPress = (id_categoria) => {
+        navigation.navigate("Productos", { id_categoria });
     };
 
     return (
         <SafeAreaView style={styles.container}>
-            <Header headerText={headerText} headerIcon={headerIcon} onIconPress={handleIconPress} />
-
-            <Search icon={searchIcon} placeholder={searchPlaceholder} />
+            <Header headerText="Hola, Andrés" headerIcon="shopping-cart" onIconPress={() => navigation.navigate("Carrito")} />
+            <Search icon="search" placeholder="Apple Watch, Macbook Pro, ..." />
             <Text style={styles.title}>Categorías</Text>
             <ScrollView contentContainerStyle={styles.cardsContainer}>
-                <BrandCard brandName="HUAWEI" brandLogo={require('../../assets/images/cool.png')} onPress={handleCardPress} />
-                <BrandCard brandName="COOLER MASTER" brandLogo={require('../../assets/images/hua.png')} onPress={handleCardPress} />
-                <BrandCard brandName="COOLER MASTER" brandLogo={require('../../assets/images/cool.png')} onPress={handleCardPress} />
-                <BrandCard brandName="COOLER MASTER" brandLogo={require('../../assets/images/cool.png')} onPress={handleCardPress} />
-                <BrandCard brandName="COOLER MASTER" brandLogo={require('../../assets/images/cool.png')} onPress={handleCardPress} />
+                {categorias.map(categoria => (
+                    <TouchableOpacity key={categoria.id_categoria} onPress={() => handleCardPress(categoria.id_categoria)}>
+                        <BrandCard
+                            brandName={categoria.nombre_categoria}
+                            brandLogo={{ uri: `${ip}/Tienda-Online---GadgetsIT/api/images/categorias/${categoria.imagen_categoria}` }}
+                        />
+                    </TouchableOpacity>
+                ))}
             </ScrollView>
         </SafeAreaView>
     );
