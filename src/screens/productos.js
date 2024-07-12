@@ -2,30 +2,49 @@ import React, { useEffect, useState } from "react";
 import { StyleSheet, SafeAreaView, Text, ScrollView, Alert } from "react-native";
 import Header from "../components/Header";
 import Search from "../components/Search";
-import BrandCard from "../components/cards_productos";
+import BrandCard from "../components/cards_productos"; // Asegúrate de que el import sea correcto
 import * as Constantes from '../utils/constantes';
 
 const Productos = ({ route, navigation }) => {
     const { idMarca, idCategoria } = route.params;
-    const [productos, setProductos] = useState([]);
+    const [productos, setProductos] = useState([]); // Asegúrate de definir el estado productos
 
     useEffect(() => {
-        obtenerProductos(idMarca, idCategoria);
+        if (!idMarca && !idCategoria) {
+            console.error('idMarca o idCategoria no se pasaron correctamente a Productos');
+            return;
+        }
+        obtenerProductos();
     }, [idMarca, idCategoria]);
 
-    const obtenerProductos = async (idMarca, idCategoria) => {
+    const obtenerProductos = async () => {
         const ip = Constantes.IP;
-        try {
-            let url = `${ip}/Tienda-Online---GadgetsIT/api/services/public/producto.php?action=readProductos`;
-            if (idMarca) url += `&idMarca=${idMarca}`;
-            if (idCategoria) url += `&idCategoria=${idCategoria}`;
+        let url = '';
+        let formData = new FormData();
 
-            const response = await fetch(url);
-            const data = await response.json();
+        if (idMarca) {
+            url = `${ip}/Tienda-Online---GadgetsIT/api/services/public/producto.php?action=readProductosMarca`;
+            formData.append('idMarca', idMarca);
+        } else if (idCategoria) {
+            url = `${ip}/Tienda-Online---GadgetsIT/api/services/public/producto.php?action=readProductosCategoria`;
+            formData.append('idCategoria', idCategoria);
+        } 
+
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                body: formData,
+            });
+            const textResponse = await response.text();
+            console.log('Respuesta del servidor:', textResponse);
+
+            const cleanResponse = textResponse.replace(/^[^{[]*/, '');
+            const data = JSON.parse(cleanResponse);
+
             if (data.status) {
                 setProductos(data.dataset);
             } else {
-                Alert.alert("Error", "No se encontraron productos");
+                Alert.alert("Error", data.error || "No se encontraron productos para los filtros seleccionados");
             }
         } catch (error) {
             console.error('Error desde Catch:', error);
@@ -45,10 +64,10 @@ const Productos = ({ route, navigation }) => {
             <ScrollView contentContainerStyle={styles.cardsContainer}>
                 {productos.map((producto) => (
                     <BrandCard
-                        key={producto.id}
-                        brandName={producto.nombre}
-                        brandLogo={{ uri: `${Constantes.IP}/images/productos/${producto.imagen}` }}
-                        onPress={() => handleCardPress(producto.id)}
+                        key={producto.id_producto}
+                        brandName={producto.nombre_producto}
+                        brandLogo={{ uri: `${Constantes.IP}/Tienda-Online---GadgetsIT/api/images/productos/${producto.imagen_producto}` }}
+                        onPress={() => handleCardPress(producto.id_producto)}
                     />
                 ))}
             </ScrollView>

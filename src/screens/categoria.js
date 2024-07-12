@@ -31,8 +31,8 @@ const Categoria = ({ navigation }) => {
         }
     };
 
-    const handleCardPress = (id_categoria) => {
-        navigation.navigate("Productos", { id_categoria });
+    const handleCardPress = (idCategoria) => {
+        navigation.navigate("Productos", { idCategoria });
     };
 
     return (
@@ -42,12 +42,12 @@ const Categoria = ({ navigation }) => {
             <Text style={styles.title}>Categorías</Text>
             <ScrollView contentContainerStyle={styles.cardsContainer}>
                 {categorias.map(categoria => (
-                    <TouchableOpacity key={categoria.id_categoria} onPress={() => handleCardPress(categoria.id_categoria)}>
-                        <BrandCard
-                            brandName={categoria.nombre_categoria}
-                            brandLogo={{ uri: `${ip}/Tienda-Online---GadgetsIT/api/images/categorias/${categoria.imagen_categoria}` }}
-                        />
-                    </TouchableOpacity>
+                    <BrandCard
+                        key={categoria.id_categoria} // Usa un identificador único
+                        brandName={categoria.nombre_categoria}
+                        brandLogo={{ uri: `${ip}${'/Tienda-Online---GadgetsIT/api/images/categorias/'}${categoria.imagen_categoria}` }}
+                        onPress={() => handleCardPress(categoria.id_categoria)}
+                    />
                 ))}
             </ScrollView>
         </SafeAreaView>

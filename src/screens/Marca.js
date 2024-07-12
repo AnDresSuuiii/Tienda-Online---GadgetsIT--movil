@@ -43,10 +43,10 @@ const Marca = ({ navigation }) => {
             <ScrollView contentContainerStyle={styles.cardsContainer}>
                 {marcas.map(marca => (
                     <BrandCard
-                        key={marca.id}
+                        key={marca.id_marca} // Usa un identificador único
                         brandName={marca.nombre_marca}
                         brandLogo={{ uri: `${ip}${'/Tienda-Online---GadgetsIT/api/images/marcas/'}${marca.imagen_marca}` }}
-                        onPress={() => handleCardPress(marca.id)}
+                        onPress={() => handleCardPress(marca.id_marca)}
                     />
                 ))}
             </ScrollView>
