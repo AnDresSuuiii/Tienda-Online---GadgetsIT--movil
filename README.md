@@ -22,8 +22,6 @@ Dependencias
 npm i react-native
 npm i react-native-community/datetimepicker
 npm i @expo/vector-icons
-npm i react-native-vector-icons/Ionicons
-npm i @react-native-community/datetimepicker
 npm i @react-navigation/bottom-tabs
 npm i @react-navigation/native
 npm i @react-navigation/native-stack
