@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, Alert } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, Alert, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import * as Constantes from '../utils/constantes';
 
@@ -7,7 +7,6 @@ const Editar_perfil = () => {
   const ip = Constantes.IP;
   const [user, setUser] = useState({});
 
-  // Agregamos estados para los campos editables
   const [nombre, setNombre] = useState('');
   const [apellido, setApellido] = useState('');
   const [email, setEmail] = useState('');
@@ -44,7 +43,6 @@ const Editar_perfil = () => {
         Alert.alert('Error', data.error);
       }
     } catch (error) {
-
       Alert.alert('Error', 'Ocurrió un error al cerrar la sesión');
     }
   };
@@ -101,7 +99,7 @@ const Editar_perfil = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.profileContainer}>
         <Image
           source={require('../../assets/images/GADGETSIT.png')}
@@ -111,154 +109,160 @@ const Editar_perfil = () => {
       </View>
       <View style={styles.infoContainer}>
         <View style={styles.inputContainer}>
-          <Ionicons name="person-outline" size={24} color="#E0E0E0" />
+          <Ionicons name="person-outline" size={24} color="#666" />
           <TextInput
             id="nombre"
             style={styles.input}
             value={nombre}
             onChangeText={setNombre}
             placeholder="Primer nombre"
+            placeholderTextColor="#666"
           />
         </View>
         <View style={styles.inputContainer}>
-          <Ionicons name="person-outline" size={24} color="#E0E0E0" />
+          <Ionicons name="person-outline" size={24} color="#666" />
           <TextInput
             style={styles.input}
             value={apellido}
             onChangeText={setApellido}
             placeholder="Apellido"
+            placeholderTextColor="#666"
           />
         </View>
         <View style={styles.inputContainer}>
-          <Ionicons name="mail-outline" size={24} color="#E0E0E0" />
+          <Ionicons name="mail-outline" size={24} color="#666" />
           <TextInput
             style={styles.input}
             value={email}
             onChangeText={setEmail}
             placeholder="Correo electrónico"
+            placeholderTextColor="#666"
           />
         </View>
         <View style={styles.inputContainer}>
-          <Ionicons name="call-outline" size={24} color="#E0E0E0" />
+          <Ionicons name="call-outline" size={24} color="#666" />
           <TextInput
             style={styles.input}
             value={telefono}
             onChangeText={setTelefono}
             placeholder="Teléfono"
+            placeholderTextColor="#666"
           />
         </View>
         <View style={styles.inputContainer}>
-          <Ionicons name="card-outline" size={24} color="#E0E0E0" />
+          <Ionicons name="card-outline" size={24} color="#666" />
           <TextInput
             style={styles.input}
             value={dui}
             onChangeText={setDui}
             placeholder="DUI"
+            placeholderTextColor="#666"
           />
         </View>
         <View style={styles.inputContainer}>
-          <Ionicons name="home-outline" size={24} color="#E0E0E0" />
+          <Ionicons name="home-outline" size={24} color="#666" />
           <TextInput
             style={styles.input}
             value={direccion}
             onChangeText={setDireccion}
             placeholder="Dirección"
+            placeholderTextColor="#666"
           />
         </View>
         <View style={styles.inputContainer}>
-          <Ionicons name="calendar-outline" size={24} color="#E0E0E0" />
+          <Ionicons name="calendar-outline" size={24} color="#666" />
           <TextInput
             style={styles.input}
             value={nacimiento}
-            onChangeText={setDireccion}
+            onChangeText={setNacimiento}
             placeholder="Fecha de nacimiento"
+            placeholderTextColor="#666"
           />
         </View>
       </View>
 
       <TouchableOpacity style={styles.editButton} onPress={handleUpdate}>
-        <Ionicons name="create-outline" size={24} color="#E0E0E0" />
+        <Ionicons name="create-outline" size={24} color="#000" />
         <Text style={styles.editButtonText}>Guardar Cambios</Text>
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-        <Ionicons name="log-out-outline" size={24} color="#E0E0E0" />
+        <Ionicons name="log-out-outline" size={24} color="#fff" />
         <Text style={styles.logoutButtonText}>Cerrar sesión</Text>
       </TouchableOpacity>
-    </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
     backgroundColor: '#000',
     alignItems: 'center',
     justifyContent: 'center',
+    paddingHorizontal: 20,
+    paddingBottom: 20,
   },
   profileImage: {
-    width: '100%',
-    height: 100,
+    width: '100%', // Cambiar el ancho al 100% para asegurarse de que se vea la imagen completa
+    height: 200, // Aumentar la altura para hacer la imagen más visible
   },
   profileContainer: {
     alignItems: 'center',
-    marginBottom: 0,
-    width: '80%',
-    paddingVertical: 20,
+    marginBottom: -30,
+    width: '100%', // Asegurarse de que el contenedor ocupe todo el ancho disponible
   },
   input: {
-    width: '90%',
+    flex: 1,
     backgroundColor: '#333',
     color: '#E0E0E0',
-    padding: 12,
-    borderRadius: 12,
+    padding: 10,
+    borderRadius: 10,
     fontSize: 16,
-    marginVertical: 8,
-    borderWidth: 0,
-    elevation: 3,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    marginLeft: 20,
+    marginVertical: 5,
   },
   infoContainer: {
     width: '100%',
-    padding: 20,
   },
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 12,
+    backgroundColor: '#333',
+    borderRadius: 10,
+    paddingHorizontal: 10,
+    marginVertical: 5,
   },
   editButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#444',
-    borderRadius: 25,
-    padding: 15,
+    backgroundColor: '#FFF',
+    borderRadius: 10,
+    padding: 10,
     marginTop: 20,
+    width: '100%',
+    justifyContent: 'center',
   },
   editButtonText: {
     marginLeft: 10,
-    color: '#E0E0E0',
+    color: '#000',
     fontWeight: 'bold',
-    fontSize: 15,
+    fontSize: 16,
   },
   logoutButton: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#E32800',
-    borderRadius: 25,
-    padding: 15,
-    marginTop: 20,
-    marginLeft: 20,
+    borderRadius: 10,
+    padding: 10,
+    marginTop: 10,
+    width: '100%',
+    justifyContent: 'center',
   },
   logoutButtonText: {
     marginLeft: 10,
-    color: '#E0E0E0',
+    color: '#fff',
     fontWeight: 'bold',
-    fontSize: 15,
+    fontSize: 16,
   },
 });
 
