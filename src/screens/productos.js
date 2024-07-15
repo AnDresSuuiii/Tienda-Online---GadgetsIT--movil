@@ -1,20 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { StyleSheet, SafeAreaView, Text, ScrollView, Alert } from "react-native";
-import Header from "../components/Header";  // Componente para el encabezado
-import Search from "../components/Search";  // Componente para la búsqueda
-import BrandCard from "../components/cards_productos";  // Componente para tarjetas de productos
-import * as Constantes from '../utils/constantes';  // Constantes para configuraciones
+import Header from "../components/Header";
+import Search from "../components/Search";
+import BrandCard from "../components/cards_productos"; 
+import * as Constantes from '../utils/constantes';
 
 const Productos = ({ route, navigation }) => {
-    const { idMarca, idCategoria } = route.params;  // Parámetros pasados a la pantalla
-    const [productos, setProductos] = useState([]);  // Estado para almacenar los productos
+    const { idMarca, idCategoria } = route.params;
+    const [productos, setProductos] = useState([]); 
 
     useEffect(() => {
-        if (!idMarca && !idCategoria) {  // Verifica si los parámetros necesarios están presentes
+        if (!idMarca && !idCategoria) {
             console.error('idMarca o idCategoria no se pasaron correctamente a Productos');
             return;
         }
-        obtenerProductos();  // Llama a la función para obtener productos
+        obtenerProductos();
     }, [idMarca, idCategoria]);
 
     const obtenerProductos = async () => {
@@ -22,10 +22,10 @@ const Productos = ({ route, navigation }) => {
         let url = '';
         let formData = new FormData();
 
-        if (idMarca) {  // Configura la URL y los datos para filtrar por marca
+        if (idMarca) {
             url = `${ip}/Tienda-Online---GadgetsIT/api/services/public/producto.php?action=readProductosMarca`;
             formData.append('idMarca', idMarca);
-        } else if (idCategoria) {  // Configura la URL y los datos para filtrar por categoría
+        } else if (idCategoria) {
             url = `${ip}/Tienda-Online---GadgetsIT/api/services/public/producto.php?action=readProductosCategoria`;
             formData.append('idCategoria', idCategoria);
         } 
@@ -35,14 +35,14 @@ const Productos = ({ route, navigation }) => {
                 method: 'POST',
                 body: formData,
             });
-            const textResponse = await response.text();  // Obtiene respuesta en formato texto
+            const textResponse = await response.text();
             console.log('Respuesta del servidor:', textResponse);
 
-            const cleanResponse = textResponse.replace(/^[^{[]*/, '');  // Limpia la respuesta para asegurar un JSON válido
-            const data = JSON.parse(cleanResponse);  // Parsea la respuesta a objeto JSON
+            const cleanResponse = textResponse.replace(/^[^{[]*/, '');
+            const data = JSON.parse(cleanResponse);
 
             if (data.status) {
-                setProductos(data.dataset);  // Actualiza el estado con los productos obtenidos
+                setProductos(data.dataset);
             } else {
                 Alert.alert("Error", data.error || "No se encontraron productos para los filtros seleccionados");
             }
@@ -53,7 +53,7 @@ const Productos = ({ route, navigation }) => {
     };
 
     const handleCardPress = (idProducto) => {
-        navigation.navigate("ProductoDetalle", { idProducto });  // Navega a los detalles del producto seleccionado
+        navigation.navigate("ProductoDetalle", { idProducto });
     };
 
     return (
@@ -64,7 +64,7 @@ const Productos = ({ route, navigation }) => {
             <ScrollView contentContainerStyle={styles.cardsContainer}>
                 {productos.map((producto) => (
                     <BrandCard
-                        key={producto.id_producto}  // Clave única para cada producto
+                        key={producto.id_producto}
                         brandName={producto.nombre_producto}
                         brandLogo={{ uri: `${Constantes.IP}/Tienda-Online---GadgetsIT/api/images/productos/${producto.imagen_producto}` }}
                         onPress={() => handleCardPress(producto.id_producto)}
@@ -75,7 +75,7 @@ const Productos = ({ route, navigation }) => {
     );
 };
 
-const styles = StyleSheet.create({  // Estilos para los componentes utilizados
+const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: "#151515",
@@ -96,4 +96,6 @@ const styles = StyleSheet.create({  // Estilos para los componentes utilizados
     },
 });
 
-export default Productos;  // Exportación del componente para su uso en otros lugares de la aplicación
+export default Productos;
+
+
