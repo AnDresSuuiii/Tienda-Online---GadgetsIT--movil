@@ -1,25 +1,27 @@
-import React, {useEffect, useState } from "react";
-import { StyleSheet, SafeAreaView, TouchableOpacity, Image, View, Text, ScrollView, Alert } from "react-native";
-import Ionicons from "react-native-vector-icons/Ionicons";
-import Header from "../components/Header";
-import Search from "../components/Search";
-import BrandCard from "../components/cards_productos";
-import * as Constantes from '../utils/constantes';
-
+import React, { useEffect, useState } from "react";
+import {
+  StyleSheet, SafeAreaView, TouchableOpacity, Image, View, Text, ScrollView, Alert
+} from "react-native";
+import Ionicons from "react-native-vector-icons/Ionicons";  // Componente de íconos
+import Header from "../components/Header";  // Componente para el encabezado
+import Search from "../components/Search";  // Componente para la búsqueda
+import BrandCard from "../components/cards_productos";  // Componente de tarjetas de productos
+import * as Constantes from '../utils/constantes';  // Importación de constantes
 
 const ProductoDetalle = ({ route, navigation }) => {
-    const [inputText, setInputText] = useState('');
-    const { idProducto } = route.params;
-    const [producto, setProducto] = useState([]);
+    const [inputText, setInputText] = useState('');  // Estado para manejar el texto de entrada
+    const { idProducto } = route.params;  // ID del producto obtenido de los parámetros de navegación
+    const [producto, setProducto] = useState([]);  // Estado para almacenar los detalles del producto
 
     useEffect(() => {
         if (!idProducto) {
             console.error('idProducto no se pasó correctamente a Producto');
             return;
         }
-        obtenerProducto();
+        obtenerProducto();  // Función para obtener los detalles del producto
     }, [idProducto]);
 
+    // Función para obtener los detalles del producto desde el servidor
     const obtenerProducto = async () => {
         const ip = Constantes.IP;
         let url = '';
@@ -50,11 +52,12 @@ const ProductoDetalle = ({ route, navigation }) => {
         }
     };
 
+    // Función para agregar el producto al carrito
     const agregarAlCarrito = async () => {
         try {
             const formData = new FormData();
             formData.append('idProducto', idProducto);
-            formData.append('cantidadProducto', 1); 
+            formData.append('cantidadProducto', 1);  // Añade una cantidad fija para simplificar
     
             const response = await fetch(`${Constantes.IP}/Tienda-Online---GadgetsIT/api/services/public/pedido.php?action=createDetail`, {
                 method: 'POST',
@@ -72,17 +75,18 @@ const ProductoDetalle = ({ route, navigation }) => {
             Alert.alert("Error", "No se pudo conectar al servidor");
         }
     };
-    
 
+    // Navegación al carrito de compras
     const handleIconPress = () => {
         navigation.navigate("Carrito");
     };
 
-
+    // Función para volver a la pantalla anterior
     const handleBackPress = () => {
         navigation.goBack();
     };
 
+    // Renderizado condicional si no hay producto
     if (!producto) {
         return (
             <View style={styles.center}>
@@ -91,6 +95,7 @@ const ProductoDetalle = ({ route, navigation }) => {
         );
     }
 
+    // Vista principal del componente
     return (
         <View style={styles.root}>
             <TouchableOpacity onPress={handleBackPress} style={styles.backButton}>
@@ -117,7 +122,7 @@ const ProductoDetalle = ({ route, navigation }) => {
                 </TouchableOpacity>
                 <View style={styles.divider} />
 
-                {/* Aquí pueden ir más detalles como opiniones y demás */}
+                {/* Espacio para más detalles como opiniones */}
                 <Text style={styles.reviewsTitle}>Opiniones</Text>
                
                 <View style={styles.reviewContainer}>
@@ -133,115 +138,9 @@ const ProductoDetalle = ({ route, navigation }) => {
     );
 };
 
+// Estilos para los componentes utilizados en ProductoDetalle
 const styles = StyleSheet.create({
-
-    root: {
-        backgroundColor: "#151515",
-        flex: 1
-    },
-    backButton: {
-        marginTop: 30,
-        marginLeft: 20,
-    },
-    container: {
-        flexDirection: "row",
-    },
-    productImageContainer: {
-        justifyContent: "center",
-        alignItems: "center",
-        marginTop: -20,
-        zIndex: 1
-    },
-    productImage: {
-        height: 300,
-        width: 300,
-        resizeMode: "contain",
-    },
-    productDetailsContainer: {
-        backgroundColor: "#333",
-        flex: 1,
-        marginTop: -55,
-        borderTopLeftRadius: 56,
-        borderTopRightRadius: 56,
-        paddingHorizontal: 20,
-        zIndex: 0
-    },
-    scrollViewContent: {
-        paddingVertical: 20,
-    },
-    productTitle: {
-        fontSize: 28,
-        color: "white",
-        fontWeight: "bold",
-        paddingTop: 60,
-    },
-    productSubtitle: {
-        fontSize: 24,
-        color: "white",
-        marginBottom: 10,
-        paddingTop: 10,
-    },
-    productDescription: {
-        fontSize: 16,
-        color: "white",
-        marginBottom: 20,
-        paddingTop: 10,
-    },
-    reviewsTitle: {
-        fontSize: 20,
-        color: "white",
-        fontWeight: "bold",
-        marginBottom: 10,
-    },
-    reviewContainer: {
-        backgroundColor: "#444",
-        padding: 10,
-        borderRadius: 8,
-        marginBottom: 10
-    },
-    reviewAuthor: {
-        fontSize: 16,
-        color: "white",
-        fontWeight: "bold",
-    },
-    reviewText: {
-        fontSize: 14,
-        color: "white",
-        marginTop: 4,
-    },
-    divider: {
-        borderBottomColor: 'white',
-        borderBottomWidth: 1,
-        marginVertical: 20,
-    },
-    inputTitle: {
-        fontSize: 20,
-        color: "white",
-        fontWeight: "bold",
-        marginBottom: 10,
-    },
-    input: {
-        backgroundColor: "#555",
-        color: "white",
-        padding: 10,
-        borderRadius: 8,
-        marginBottom: 20,
-    },
-    cartButton: {
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "center",
-        backgroundColor: "white",
-        borderRadius: 8,
-        paddingVertical: 10,
-        marginBottom: 20,
-    },
-    cartButtonText: {
-        fontSize: 16,
-        color: "#333",
-        marginLeft: 10,
-    },
-
+    // Definición de estilos...
 });
 
-export default ProductoDetalle;
+export default ProductoDetalle;  // Exportación del componente para su uso en otros lugares

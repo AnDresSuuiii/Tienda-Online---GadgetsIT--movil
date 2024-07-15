@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
-import * as Constantes from '../utils/constantes'
-import { useFocusEffect } from '@react-navigation/native';
+import * as Constantes from '../utils/constantes'; // Importación de constantes generales
+import { useFocusEffect } from '@react-navigation/native'; // Importación para manejar el enfoque de la pantalla
 
 const Login = ({
     navigation,
@@ -13,16 +13,18 @@ const Login = ({
     forgotPasswordText = "¿Olvidaste tu contraseña?",
     createAccountText = "¿No tienes cuenta? Crear cuenta"
 }) => {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const ip = Constantes.IP;
+    const [email, setEmail] = useState(''); // Estado para el correo electrónico
+    const [password, setPassword] = useState(''); // Estado para la contraseña
+    const ip = Constantes.IP; // Dirección IP de la API
 
+    // Efecto que se activa al enfocar la pantalla
     useFocusEffect(
         React.useCallback(() => {
-            validarSesion(); 
+            validarSesion(); // Función para validar la sesión
         }, [])
     );
 
+    // Función para validar si hay una sesión activa
     const validarSesion = async () => {
         try {
             const response = await fetch(`${ip}/Tienda-Online---GadgetsIT/api/services/public/cliente.php?action=getUser`, {
@@ -32,7 +34,7 @@ const Login = ({
             const data = await response.json();
 
             if (data.status === 1) {
-                navigation.navigate('RecipeListTab');
+                navigation.navigate('RecipeListTab'); // Navega a la lista de recetas si hay sesión
                 console.log("Se ingresa con la sesión activa")
             } else {
                 console.log("No hay sesión activa")
@@ -43,6 +45,7 @@ const Login = ({
         }
     }
 
+    // Función para manejar el inicio de sesión
     const handleLogin = async () => {
         if (!email || !password) {
             Alert.alert('Error', 'Por favor ingrese su correo y contraseña');
@@ -62,7 +65,7 @@ const Login = ({
             const data = await response.json();
 
             if (data.status) {
-                navigation.navigate('RecipeListTab');
+                navigation.navigate('RecipeListTab'); // Navega a la lista de recetas si el inicio es exitoso
             } else {
                 Alert.alert('Error de sesión', data.error);
             }
@@ -72,10 +75,12 @@ const Login = ({
         }
     };
 
+    // Función para navegar a la pantalla de creación de cuenta
     const createAccount = () => {
         navigation.navigate('Crear_cuenta');
     };
 
+    // Función para navegar a la pantalla de recuperación de contraseña
     const recoverPassword = () => {
         navigation.navigate('Recuperacion_correo');
     };

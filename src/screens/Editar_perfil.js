@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, Alert, ScrollView } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import * as Constantes from '../utils/constantes';
+import { Ionicons } from '@expo/vector-icons';  // Importa íconos de Ionicons para mejorar la interfaz visual
+import * as Constantes from '../utils/constantes';  // Importa constantes, generalmente configuraciones como la dirección IP del servidor
 
 const Editar_perfil = () => {
-  const ip = Constantes.IP;
-  const [user, setUser] = useState({});
+  const ip = Constantes.IP;  // Dirección IP del servidor almacenada en las constantes
+  const [user, setUser] = useState({});  // Estado para almacenar los datos del usuario
 
   const [nombre, setNombre] = useState('');
   const [apellido, setApellido] = useState('');
@@ -15,6 +15,7 @@ const Editar_perfil = () => {
   const [direccion, setDireccion] = useState('');
   const [nacimiento, setNacimiento] = useState('');
 
+  // Efecto para cargar los datos del usuario al montar el componente
   useEffect(() => {
     handlegetUser();
   }, []);
