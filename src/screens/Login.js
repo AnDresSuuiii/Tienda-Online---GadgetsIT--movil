@@ -1,20 +1,47 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import * as Constantes from '../utils/constantes'
+import { useFocusEffect } from '@react-navigation/native';
 
-const Login = ({ 
+const Login = ({
     navigation,
     titleText = "GADGETSIT",
     subtitleText = "Iniciar sesión",
     emailPlaceholder = "Correo",
     passwordPlaceholder = "Contraseña",
-    continueButtonText = "Continuar", 
-    forgotPasswordText = "¿Olvidaste tu contraseña?", 
+    continueButtonText = "Continuar",
+    forgotPasswordText = "¿Olvidaste tu contraseña?",
     createAccountText = "¿No tienes cuenta? Crear cuenta"
 }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const ip = Constantes.IP;
+
+    useFocusEffect(
+        React.useCallback(() => {
+            validarSesion(); 
+        }, [])
+    );
+
+    const validarSesion = async () => {
+        try {
+            const response = await fetch(`${ip}/Tienda-Online---GadgetsIT/api/services/public/cliente.php?action=getUser`, {
+                method: 'GET'
+            });
+
+            const data = await response.json();
+
+            if (data.status === 1) {
+                navigation.navigate('RecipeListTab');
+                console.log("Se ingresa con la sesión activa")
+            } else {
+                console.log("No hay sesión activa")
+                return
+            }
+        } catch (error) {
+            Alert.alert('Error', 'Ocurrió un error al validar la sesión');
+        }
+    }
 
     const handleLogin = async () => {
         if (!email || !password) {
@@ -35,11 +62,8 @@ const Login = ({
             const data = await response.json();
 
             if (data.status) {
-                // Si el inicio de sesión es exitoso
-                Alert.alert('Exito', 'Inicio de sesión exitoso');
-                navigation.navigate('RecipeListTab'); // Asegúrate de cambiar 'RecipeListTab' al destino correcto
+                navigation.navigate('RecipeListTab');
             } else {
-                // Si hay algún problema con el inicio de sesión
                 Alert.alert('Error de sesión', data.error);
             }
         } catch (error) {

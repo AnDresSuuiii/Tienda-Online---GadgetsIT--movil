@@ -1,68 +1,134 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import * as Constantes from '../utils/constantes';
 
-const Editar_perfil = ({
-  profileName = "Jose Manolo",
-  profileEmail = "jose_man@gamil.com",
-  firstName = "Jose",
-  lastName = "Manolo",
-  phone = "7082-9693",
-  onEditPress
-}) => {
-  const [editableProfileName, setEditableProfileName] = useState(profileName);
-  const [editableProfileEmail, setEditableProfileEmail] = useState(profileEmail);
-  const [editableFirstName, setEditableFirstName] = useState(firstName);
-  const [editableLastName, setEditableLastName] = useState(lastName);
-  const [editablePhone, setEditablePhone] = useState(phone);
+const Editar_perfil = () => {
+
+
+  const ip = Constantes.IP;
+
+  const [user, setUser] = useState([]);
+
+  useEffect(() => {
+    handlegetUser();
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      const response = await fetch(`${ip}/Tienda-Online---GadgetsIT/api/services/public/cliente.php?action=logOut`, {
+        method: 'GET'
+      });
+      const data = await response.json();
+      if (data.status) {
+        navigation.navigate('Login');
+      } else {
+        Alert.alert('Error', data.error);
+      }
+    } catch (error) {
+
+      Alert.alert('Error', 'Ocurrió un error al cerrar la sesión');
+    }
+  };
+
+  const handlegetUser = async () => {
+    try {
+      const response = await fetch(`${ip}/Tienda-Online---GadgetsIT/api/services/public/cliente.php?action=readProfile`, {
+        method: 'GET',
+      });
+      const data = await response.json();
+      if (data.status) {
+        setUser(data.dataset);
+      } else {
+        console.error('Error al obtener usuario:', data.error);
+        Alert.alert('Error', 'No se pudo cargar el usuario');
+      }
+    } catch (error) {
+      console.error('Error desde Catch:', error);
+      Alert.alert('Error', 'Ocurrió un error al conectar con el servidor');
+    }
+  };
 
   return (
     <View style={styles.container}>
       <View style={styles.profileContainer}>
-        <Ionicons name="person-circle-outline" size={64} color="white" />
-        <TextInput
-          style={styles.profileName}
-          value={editableProfileName}
-          onChangeText={setEditableProfileName}
-        />
-        <TextInput
-          style={styles.profileEmail}
-          value={editableProfileEmail}
-          onChangeText={setEditableProfileEmail}
+        <Image
+          source={require('../../assets/images/GADGETSIT.png')}
+          style={styles.profileImage}
+          resizeMode="contain"
         />
       </View>
-      
+
       <View style={styles.infoContainer}>
-        <View style={styles.infoItem}>
-          <Ionicons name="person-outline" size={24} color="black" />
+        <View style={styles.inputContainer}>
+          <Ionicons name="person-outline" size={24} color="#E0E0E0" />
           <TextInput
-            style={styles.infoText}
-            value={editableFirstName}
-            onChangeText={setEditableFirstName}
+            style={styles.input}
+            value={user.nombre_cliente}
+            placeholder="Primer nombre"
           />
         </View>
-        <View style={styles.infoItem}>
-          <Ionicons name="person-outline" size={24} color="black" />
+        <View style={styles.inputContainer}>
+          <Ionicons name="person-outline" size={24} color="#E0E0E0" />
           <TextInput
-            style={styles.infoText}
-            value={editableLastName}
-            onChangeText={setEditableLastName}
+            style={styles.input}
+            value={user.apellido_cliente}
+            placeholder="Apellido"
           />
         </View>
-        <View style={styles.infoItem}>
-          <Ionicons name="call-outline" size={24} color="black" />
+        <View style={styles.inputContainer}>
+          <Ionicons name="mail-outline" size={24} color="#E0E0E0" />
           <TextInput
-            style={styles.infoText}
-            value={editablePhone}
-            onChangeText={setEditablePhone}
+            style={styles.input}
+            value={user.correo_cliente}
+            placeholder="Correo electrónico"
+          />
+        </View>
+        <View style={styles.inputContainer}>
+          <Ionicons name="call-outline" size={24} color="#E0E0E0" />
+          <TextInput
+            style={styles.input}
+            value={user.telefono_cliente}
+            placeholder="Teléfono"
+          />
+        </View>
+        <View style={styles.inputContainer}>
+          <Ionicons name="card-outline" size={24} color="#E0E0E0" />
+          <TextInput
+            style={styles.input}
+            value={user.dui_cliente}
+            placeholder="DUI"
+          />
+        </View>
+        <View style={styles.inputContainer}>
+          <Ionicons name="home-outline" size={24} color="#E0E0E0" />
+          <TextInput
+            style={styles.input}
+            value={user.direccion_cliente}
+            placeholder="Dirección"
+          />
+        </View>
+        <View style={styles.inputContainer}>
+          <Ionicons name="calendar-outline" size={24} color="#E0E0E0" />
+          <TextInput
+            style={styles.input}
+            value={user.nacimiento_cliente}
+            placeholder="Fecha de nacimiento"
           />
         </View>
       </View>
-      
-      <TouchableOpacity style={styles.editButton} onPress={() => onEditPress(editableProfileName, editableProfileEmail, editableFirstName, editableLastName, editablePhone)}>
-        <Ionicons name="create-outline" size={24} color="black" />
-        <Text style={styles.editButtonText}>Guardar Cambios</Text>
-      </TouchableOpacity>
+
+      <View style={styles.inputContainer}>
+        <TouchableOpacity style={styles.editButton} onPress={() => onEditPress(editableProfileEmail, editableFirstName, editableLastName, editablePhone, editableDUI, editableAddress, editableBirthDate)}>
+          <Ionicons name="create-outline" size={24} color="#E0E0E0" />
+          <Text style={styles.editButtonText}>Guardar Cambios</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+          <Ionicons name="log-out-outline" size={24} color="#E0E0E0" />
+          <Text style={styles.logoutButtonText}>Cerrar sesión</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -74,63 +140,69 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  profileImage: {
+    width: '100%',
+    height: 100,
+  },
   profileContainer: {
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: 0,
+    width: '80%',
+    paddingVertical: 20,
+  },
+  input: {
+    width: '90%',
     backgroundColor: '#333',
-    padding: 20,
-    borderRadius: 10,
-  },
-  profileName: {
-    color: 'white',
-    fontSize: 24,
-    fontWeight: 'bold',
-    borderBottomWidth: 1,
-    borderBottomColor: 'white',
-    marginBottom: 10,
-    width: '100%',
-    textAlign: 'center'
-  },
-  profileEmail: {
-    color: 'white',
+    color: '#E0E0E0',
+    padding: 12,
+    borderRadius: 12,
     fontSize: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: 'white',
-    width: '100%',
-    textAlign: 'center'
+    marginVertical: 8,
+    borderWidth: 0,
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    marginLeft: 20,
   },
   infoContainer: {
-    backgroundColor: '#222',
+    width: '100%',
     padding: 20,
-    borderRadius: 10,
-    width: '90%',
   },
-  infoItem: {
+  inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 15,
-  },
-  infoText: {
-    color: 'white',
-    fontSize: 16,
-    marginLeft: 10,
-    flex: 1,
-    borderBottomWidth: 1,
-    borderBottomColor: 'white',
+    marginBottom: 12,
   },
   editButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'white',
-    padding: 15,
+    backgroundColor: '#444',
     borderRadius: 25,
+    padding: 15,
     marginTop: 20,
   },
   editButtonText: {
     marginLeft: 10,
-    color: 'black',
+    color: '#E0E0E0',
     fontWeight: 'bold',
-    fontSize: 18,
+    fontSize: 15,
+  },
+  logoutButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#E32800',
+    borderRadius: 25,
+    padding: 15,
+    marginTop: 20,
+    marginLeft: 20,
+  },
+  logoutButtonText: {
+    marginLeft: 10,
+    color: '#E0E0E0',
+    fontWeight: 'bold',
+    fontSize: 15,
   },
 });
 

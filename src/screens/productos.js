@@ -2,12 +2,12 @@ import React, { useEffect, useState } from "react";
 import { StyleSheet, SafeAreaView, Text, ScrollView, Alert } from "react-native";
 import Header from "../components/Header";
 import Search from "../components/Search";
-import BrandCard from "../components/cards_productos"; // Asegúrate de que el import sea correcto
+import BrandCard from "../components/cards_productos"; 
 import * as Constantes from '../utils/constantes';
 
 const Productos = ({ route, navigation }) => {
     const { idMarca, idCategoria } = route.params;
-    const [productos, setProductos] = useState([]); // Asegúrate de definir el estado productos
+    const [productos, setProductos] = useState([]); 
 
     useEffect(() => {
         if (!idMarca && !idCategoria) {
@@ -97,3 +97,5 @@ const styles = StyleSheet.create({
 });
 
 export default Productos;
+
+

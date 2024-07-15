@@ -1,57 +1,86 @@
 // Carrito.js
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, FlatList, StyleSheet } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TouchableOpacity, FlatList, StyleSheet, Alert } from 'react-native';
 import CardItem from '../components/card_carrito';
+import Constants from 'expo-constants';
+import * as Constantes from '../utils/constantes';
+import { useFocusEffect } from '@react-navigation/native';
 
-const productos = [
-    { id: '1', nombre: 'iPhone 14', precio: 180.00, imagen: require('../../assets/images/ps.png') },
-    { id: '2', nombre: 'Series 9', precio: 200.00, imagen: require('../../assets/images/Image.png') },
-    { id: '3', nombre: 'iPhone 11', precio: 350.00, imagen: require('../../assets/images/Image.png') },
-    { id: '4', nombre: 'Series 9', precio: 200.00, imagen: require('../../assets/images/ps.png') },
-];
 
-const Carrito = () => {
-    const [cantidades, setCantidades] = useState(productos.reduce((acc, producto) => {
-        acc[producto.id] = 1;
-        return acc;
-    }, {}));
+const Carrito = ({navigation}) => {
 
-    const incrementar = (id) => {
-        setCantidades({
-            ...cantidades,
-            [id]: cantidades[id] + 1,
-        });
+    const productos = dataDetalleCarrito
+
+    const [dataDetalleCarrito, setDataDetalleCarrito] = useState([]);
+
+    const ip = Constantes.IP;
+
+    useFocusEffect(
+        React.useCallback(() => {
+            getDetalleCarrito();
+        }, [])
+    );
+
+    const getDetalleCarrito = async () => {
+        try {
+            const response = await fetch(`${ip}/Tienda-Online---GadgetsIT/api/services/public/pedido.php?action=readDetail`, {
+                method: 'GET',
+            });
+            const data = await response.json();
+            console.log(data, "Data desde getDetalleCarrito")
+            if (data.status) {
+                setDataDetalleCarrito(data.dataset);
+            } else {
+                console.log("No hay detalles del carrito disponibles")
+            }
+        } catch (error) {
+            console.error(error, "Error desde Catch");
+            Alert.alert('Error', 'Ocurrió un error al listar las categorias');
+        }
     };
 
-    const decrementar = (id) => {
-        setCantidades({
-            ...cantidades,
-            [id]: cantidades[id] > 1 ? cantidades[id] - 1 : 1,
-        });
+    const finalizarPedido = async () => {
+        try {
+            const response = await fetch(`${ip}/Tienda-Online---GadgetsIT/api/services/public/pedido.php?action=finishOrder`, {
+                method: 'GET',
+            });
+            const data = await response.json();
+            if (data.status) {
+                Alert.alert("Se finalizó la compra correctamente")
+                setDataDetalleCarrito([]);
+                navigation.navigate("Login");
+            } else {
+                Alert.alert('Error', data.error);
+            }
+        } catch (error) {
+            console.log(error);
+            //Alert.alert('Error', 'Ocurrió un error al finalizar pedido');
+        }
     };
 
-    const total = productos.reduce((suma, producto) => suma + producto.precio * cantidades[producto.id], 0);
+    const getotal = async () => {
+        
+    };
 
     return (
         <View style={styles.contenedor}>
-            <Text style={styles.title}>Mi carriro</Text>
+            <Text style={styles.title}>Mi Carrito</Text>
 
             <FlatList
-                data={productos}
+                data={dataDetalleCarrito}
                 renderItem={({ item }) => (
                     <CardItem
                         item={item}
-                        cantidad={cantidades[item.id]}
-                        incrementar={incrementar}
-                        decrementar={decrementar}
+                        updateDataDetalleCarrito={setDataDetalleCarrito}
+                        updatedetail={getDetalleCarrito}
                     />
                 )}
-                keyExtractor={(item) => item.id}
+                keyExtractor={(item, index) => `item-${index}`} 
                 ListFooterComponent={
                     <View style={styles.footer}>
-                        <Text style={styles.total}>TOTAL: ${total.toFixed(2)}</Text>
-                        <TouchableOpacity style={styles.botonFinalizar}>
-                            <Text style={styles.botonFinalizarTexto}>Finalizar pedido</Text>
+                        <Text style={styles.total}>TOTAL: </Text>
+                        <TouchableOpacity style={styles.botonFinalizar} onPress={() => finalizarPedido()}>
+                            <Text style={styles.botonFinalizarTexto} >Finalizar pedido</Text>
                         </TouchableOpacity>
                     </View>
                 }
@@ -91,9 +120,11 @@ const styles = StyleSheet.create({
         letterSpacing: 0.5,
         fontWeight: 'bold',
         marginVertical: 16,
-        top:20,
-        marginBottom:50
+        top: 20,
+        marginBottom: 50
     },
 });
 
 export default Carrito;
+
+

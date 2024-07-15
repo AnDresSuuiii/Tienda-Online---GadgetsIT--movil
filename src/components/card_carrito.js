@@ -1,30 +1,110 @@
 // CardItem.js
-import React from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, Image, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import * as Constantes from '../utils/constantes';
 
-const CardItem = ({ item, cantidad, incrementar, decrementar }) => (
-  <View style={styles.itemContainer}>
+const CardItem = ({ item, id_detalle, updateDataDetalleCarrito, updatedetail }) => {
 
-    
-    <Image source={item.imagen} style={styles.imagen} />
-    <View style={styles.infoContainer}>
-      <Text style={styles.nombre}>{item.nombre}</Text>
-      <Text style={styles.precio}>${item.precio.toFixed(2)}</Text>
+  const ip = Constantes.IP;
+
+  const handleDeleteDetalleCarrito = async (idDetalle) => {
+    try {
+      Alert.alert(
+        'Confirmación',
+        '¿Estás seguro de que deseas eliminar este elemento del carrito?',
+        [
+          {
+            text: 'Cancelar',
+            style: 'cancel'
+          },
+          {
+            text: 'Eliminar',
+            onPress: async () => {
+              const formData = new FormData();
+              formData.append('idDetalle', idDetalle);
+              const response = await fetch(`${ip}/Tienda-Online---GadgetsIT/api/services/public/pedido.php?action=deleteDetail`, {
+                method: 'POST',
+                body: formData
+              });
+              const data = await response.json();
+              if (data.status) {
+                Alert.alert('Datos eliminados correctamente del carrito');
+                updateDataDetalleCarrito(prevData => prevData.filter(item => item.id_detalle !== idDetalle));
+              } else {
+                Alert.alert('Error al eliminar del carrito', data.error);
+              }
+            }
+          }
+        ]
+      );
+    } catch (error) {
+      Alert.alert("Error al eliminar del carrito")
+    }
+  };
+
+  const handleUpdateDetalleCarrito = async (idDetalle, cantidadProductoCarrito) => {
+    try {
+      const formData = new FormData();
+      formData.append('idDetalle', idDetalle);
+      formData.append('cantidadProducto', cantidadProductoCarrito);
+
+      const response = await fetch(`${ip}/Tienda-Online---GadgetsIT/api/services/public/pedido.php?action=updateDetail`, {
+        method: 'POST',
+        body: formData
+      });
+
+      const data = await response.json();
+      if (data.status) {
+        updatedetail();
+        Alert.alert('Se actualizó el detalle del producto');
+      } else {
+        Alert.alert('Error al editar detalle carrito', data.error);
+      }
+    } catch (error) {
+      Alert.alert("Error en editar carrito", error.message);
+    }
+  };
+
+
+  const handleUpdateplus = (idDetalle, cantidadProductoCarrito) => {
+    let newQuantity = cantidadProductoCarrito + 1;
+    handleUpdateDetalleCarrito(idDetalle, newQuantity);
+  };
+
+  const handleUpdateminus = (idDetalle, cantidadProductoCarrito) => {
+    let newQuantity = Math.max(0, cantidadProductoCarrito - 1);  
+    handleUpdateDetalleCarrito(idDetalle, newQuantity);
+  };
+
+
+
+
+  return (
+    <View style={styles.itemContainer}>
+      <Image
+        source={{ uri: `${ip}/Tienda-Online---GadgetsIT/api/images/productos/${item.imagen_producto}` }}
+        style={styles.imagen}
+      />
+      <View style={styles.infoContainer}>
+        <Text style={styles.nombre}>{item.nombre_producto}</Text>
+        <Text style={styles.precio}>${item.precio_producto}</Text>
+      </View>
+      <View style={styles.cantidadContainer}>
+        <TouchableOpacity style={styles.boton} onPress={() => handleUpdateminus(item.id_detalle, item.cantidad_producto)}>
+          <Text style={styles.botonTexto}>-</Text>
+        </TouchableOpacity>
+        <Text style={styles.cantidad}>{item.cantidad_producto}</Text>
+        <TouchableOpacity style={styles.boton} onPress={() => handleUpdateplus(item.id_detalle, item.cantidad_producto)}>
+          <Text style={styles.botonTexto}>+</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.botonEliminar} onPress={() => handleDeleteDetalleCarrito(item.id_detalle)}>
+          <Text style={styles.botonTexto}>🗑️</Text>
+        </TouchableOpacity>
+      </View>
     </View>
-    <View style={styles.cantidadContainer}>
-      <TouchableOpacity style={styles.boton} onPress={() => decrementar(item.id)}>
-        <Text style={styles.botonTexto}>-</Text>
-      </TouchableOpacity>
-      <Text style={styles.cantidad}>{cantidad}</Text>
-      <TouchableOpacity style={styles.boton} onPress={() => incrementar(item.id)}>
-        <Text style={styles.botonTexto}>+</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.botonEliminar}>
-        <Text style={styles.botonTexto}>🗑️</Text>
-      </TouchableOpacity>
-    </View>
-  </View>
-);
+  );
+};
 
 const styles = StyleSheet.create({
   itemContainer: {

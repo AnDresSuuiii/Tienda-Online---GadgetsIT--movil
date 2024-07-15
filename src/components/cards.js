@@ -19,11 +19,11 @@ const styles = StyleSheet.create({
     padding: 20,
     alignItems: 'center',
     margin: 7,
-    width: 150, // Ajusta el tamaño de la card según tus necesidades
+    width: 150, 
   },
   imageContainer: {
     width: '100%',
-    height: 180, // Altura fija para la imagen
+    height: 180,
     marginBottom: 10,
     justifyContent: 'center',
     alignItems: 'center',

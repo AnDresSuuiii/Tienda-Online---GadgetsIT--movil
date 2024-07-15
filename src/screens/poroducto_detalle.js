@@ -1,9 +1,78 @@
-import React, { useState } from "react";
-import { StyleSheet, SafeAreaView, TouchableOpacity, Image, View, Text, ScrollView, TextInput } from "react-native";
+import React, {useEffect, useState } from "react";
+import { StyleSheet, SafeAreaView, TouchableOpacity, Image, View, Text, ScrollView, Alert } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import Header from "../components/Header";
+import Search from "../components/Search";
+import BrandCard from "../components/cards_productos";
+import * as Constantes from '../utils/constantes';
 
-const ProductoDetalle = ({ navigation }) => {
+
+const ProductoDetalle = ({ route, navigation }) => {
     const [inputText, setInputText] = useState('');
+    const { idProducto } = route.params;
+    const [producto, setProducto] = useState([]);
+
+    useEffect(() => {
+        if (!idProducto) {
+            console.error('idProducto no se pasó correctamente a Producto');
+            return;
+        }
+        obtenerProducto();
+    }, [idProducto]);
+
+    const obtenerProducto = async () => {
+        const ip = Constantes.IP;
+        let url = '';
+        let formData = new FormData();
+
+        url = `${ip}/Tienda-Online---GadgetsIT/api/services/public/producto.php?action=readOne`;
+        formData.append('idProducto', idProducto);
+
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                body: formData,
+            });
+            const textResponse = await response.text();
+            console.log('Respuesta del servidor:', textResponse);
+
+            const cleanResponse = textResponse.replace(/^[^{[]*/, '');
+            const data = JSON.parse(cleanResponse);
+
+            if (data.status) {
+                setProducto(data.dataset);
+            } else {
+                Alert.alert("Error", data.error || "No se encontró el producto para los filtros seleccionados");
+            }
+        } catch (error) {
+            console.error('Error desde Catch:', error);
+            Alert.alert("Error", "Ocurrió un error al conectar con el servidor");
+        }
+    };
+
+    const agregarAlCarrito = async () => {
+        try {
+            const formData = new FormData();
+            formData.append('idProducto', idProducto);
+            formData.append('cantidadProducto', 1); 
+    
+            const response = await fetch(`${Constantes.IP}/Tienda-Online---GadgetsIT/api/services/public/pedido.php?action=createDetail`, {
+                method: 'POST',
+                body: formData,
+            });
+    
+            const resultado = await response.json();
+    
+            if (resultado.status) {
+                Alert.alert("Éxito", "Producto añadido al carrito");
+            } else {
+                Alert.alert("Error", resultado.error || "No se pudo añadir el producto al carrito");
+            }
+        } catch (error) {
+            Alert.alert("Error", "No se pudo conectar al servidor");
+        }
+    };
+    
 
     const handleIconPress = () => {
         navigation.navigate("Carrito");
@@ -14,42 +83,43 @@ const ProductoDetalle = ({ navigation }) => {
         navigation.goBack();
     };
 
+    if (!producto) {
+        return (
+            <View style={styles.center}>
+                <Text style={styles.loading}>Cargando...</Text>
+            </View>
+        );
+    }
+
     return (
         <View style={styles.root}>
             <TouchableOpacity onPress={handleBackPress} style={styles.backButton}>
-                <SafeAreaView style={styles.container}>
+                <SafeAreaView>
                     <Ionicons name="chevron-back" size={28} color="white" />
                 </SafeAreaView>
             </TouchableOpacity>
 
             <View style={styles.productImageContainer}>
-                <Image source={require("../../assets/images/Image.png")} style={styles.productImage} />
+                <Image
+                    source={{ uri: `${Constantes.IP}/Tienda-Online---GadgetsIT/api/images/productos/${producto.imagen_producto}` }}
+                    style={styles.productImage}
+                />
             </View>
 
             <ScrollView style={styles.productDetailsContainer} contentContainerStyle={styles.scrollViewContent}>
-                <Text style={styles.productTitle}>Apple Watch</Text>
-                <Text style={styles.productSubtitle}>Series 5 SE</Text>
+                <Text style={styles.productTitle}>{producto.nombre_producto}</Text>
+                <Text style={styles.productSubtitle}>{"$" + producto.precio_producto}</Text>
+                <Text style={styles.productDescription}>{producto.descripcion_producto}</Text>
 
-                <Text style={styles.productDescription}>
-                    El Apple Watch más fuerte y equipado desafía los límites una vez más. Ahora con el flamante S9 SiP,
-                    una forma nueva y mágica de usar tu reloj sin siquiera tocar la pantalla, la más brillante de Apple
-                    hasta este momento. Además, ahora puedes elegir combinaciones de cajas y correas neutras en carbono.
-                </Text>
-
-                <TouchableOpacity style={styles.cartButton} onPress={handleIconPress}>
+                <TouchableOpacity style={styles.cartButton} onPress={agregarAlCarrito}>
                     <Ionicons name="cart" size={24} color="#333" />
                     <Text style={styles.cartButtonText}>Añadir al carrito</Text>
                 </TouchableOpacity>
                 <View style={styles.divider} />
 
-                <Text style={styles.reviewsTitle}>Sobre este artículo</Text>
-                <Text style={styles.productDescription}>
-                    El Apple Watch más fuerte y equipado desafía los límites una vez más. Ahora con el flamante S9 SiP,
-                    una forma nueva y mágica de usar tu reloj sin siquiera tocar la pantalla, la más brillante de Apple
-                    hasta este momento. Además, ahora puedes elegir combinaciones de cajas y correas neutras en carbono.
-                </Text>
-
+                {/* Aquí pueden ir más detalles como opiniones y demás */}
                 <Text style={styles.reviewsTitle}>Opiniones</Text>
+               
                 <View style={styles.reviewContainer}>
                     <Text style={styles.reviewAuthor}>Robert Downey Jr.</Text>
                     <Ionicons name="heart-outline" size={16} color="white" />
@@ -57,28 +127,14 @@ const ProductoDetalle = ({ navigation }) => {
                         Me encantó la calidad del producto, y el precio súper bueno, lo único que no me gustó fue el precio un poco elevado...
                     </Text>
                 </View>
-                <View style={styles.reviewContainer}>
-                    <Text style={styles.reviewAuthor}>Robert Downey Jr.</Text>
-                    <Ionicons name="heart-outline" size={16} color="white" />
-                    <Text style={styles.reviewText}>
-                        Me encantó la calidad del producto, y el precio súper bueno, lo único que no me gustó fue el precio un poco elevado...
-                    </Text>
-                </View>
-
-                <Text style={styles.inputTitle}>Escribe tu opinión</Text>
-                <TextInput
-                    style={styles.input}
-                    placeholder="Escribe tu opinión aquí..."
-                    placeholderTextColor="#888"
-                    value={inputText}
-                    onChangeText={setInputText}
-                />
+                
             </ScrollView>
         </View>
     );
 };
 
 const styles = StyleSheet.create({
+
     root: {
         backgroundColor: "#151515",
         flex: 1
@@ -117,16 +173,19 @@ const styles = StyleSheet.create({
         fontSize: 28,
         color: "white",
         fontWeight: "bold",
+        paddingTop: 60,
     },
     productSubtitle: {
-        fontSize: 18,
+        fontSize: 24,
         color: "white",
         marginBottom: 10,
+        paddingTop: 10,
     },
     productDescription: {
         fontSize: 16,
         color: "white",
         marginBottom: 20,
+        paddingTop: 10,
     },
     reviewsTitle: {
         fontSize: 20,
