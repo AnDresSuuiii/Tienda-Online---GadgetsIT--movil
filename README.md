@@ -1,6 +1,6 @@
-EDGAR ARI PEÑATE RIVERA 20220625\
-Andrés Adalberto Flores Alfaro 20210549\
-KEVIN GERARDO NUÑEZ ROLIN 20220137
+Edgar Ari Peñate Rivera 20220625
+Andrés Adalberto Flores Alfaro 20210549
+Kevin Gerardo Nuñez Rolin 20220137
 
 
 
@@ -18,9 +18,17 @@ La licencia CC BY 4.0 (Creative Commons Attribution 4.0 International) permite a
 pueden hacer con las obras licenciadas bajo esta licencia, lo que permite la mayor libertad
 
 
-
-NMP react-native\
-NMP '@react-native-community/datetimepicker'\
-NMP '@expo/vector-icons'\
-NMP "react-native-vector-icons/Ionicons"
+Dependencias
+npm i react-native
+npm i react-native-community/datetimepicker
+npm i @expo/vector-icons
+npm i react-native-vector-icons/Ionicons
+npm i @react-native-community/datetimepicker
+npm i @react-navigation/bottom-tabs
+npm i @react-navigation/native
+npm i @react-navigation/native-stack
+npm i react-native-masked-text
+npm i react-native-paper
+npm i react-native-picker-select
+npm i react-native-vector-icons
 
