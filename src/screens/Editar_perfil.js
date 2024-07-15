@@ -4,15 +4,33 @@ import { Ionicons } from '@expo/vector-icons';
 import * as Constantes from '../utils/constantes';
 
 const Editar_perfil = () => {
-
-
   const ip = Constantes.IP;
+  const [user, setUser] = useState({});
 
-  const [user, setUser] = useState([]);
+  // Agregamos estados para los campos editables
+  const [nombre, setNombre] = useState('');
+  const [apellido, setApellido] = useState('');
+  const [email, setEmail] = useState('');
+  const [telefono, setTelefono] = useState('');
+  const [dui, setDui] = useState('');
+  const [direccion, setDireccion] = useState('');
+  const [nacimiento, setNacimiento] = useState('');
 
   useEffect(() => {
     handlegetUser();
   }, []);
+
+  useEffect(() => {
+    if (user) {
+      setNombre(user.nombre_cliente);
+      setApellido(user.apellido_cliente);
+      setEmail(user.correo_cliente);
+      setTelefono(user.telefono_cliente);
+      setDui(user.dui_cliente);
+      setDireccion(user.direccion_cliente);
+      setNacimiento(user.nacimiento_cliente);
+    }
+  }, [user]);
 
   const handleLogout = async () => {
     try {
@@ -49,6 +67,39 @@ const Editar_perfil = () => {
     }
   };
 
+  const handleUpdate = async () => {
+    if (!nombre || !apellido || !email || !telefono || !direccion || !dui || !nacimiento) {
+      Alert.alert("Por favor, complete todos los campos");
+      return;
+    }
+
+    try {
+      const formData = new FormData();
+      formData.append('nombreCliente', nombre);
+      formData.append('apellidoCliente', apellido);
+      formData.append('correoCliente', email);
+      formData.append('direccionCliente', direccion);
+      formData.append('duiCliente', dui);
+      formData.append('nacimientoCliente', nacimiento);
+      formData.append('telefonoCliente', telefono);
+
+      const response = await fetch(`${ip}/Tienda-Online---GadgetsIT/api/services/public/cliente.php?action=editProfile`, {
+        method: 'POST',
+        body: formData
+      });
+
+      const data = await response.json();
+      if (data.status) {
+        Alert.alert("Datos actualizados con exito");
+      } else {
+        Alert.alert("Error", data.error);
+      }
+    } catch (error) {
+      console.error("Error al actualizar", error);
+      Alert.alert("Error", "Ocurrió un error al actualizar");
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.profileContainer}>
@@ -58,13 +109,14 @@ const Editar_perfil = () => {
           resizeMode="contain"
         />
       </View>
-
       <View style={styles.infoContainer}>
         <View style={styles.inputContainer}>
           <Ionicons name="person-outline" size={24} color="#E0E0E0" />
           <TextInput
+            id="nombre"
             style={styles.input}
-            value={user.nombre_cliente}
+            value={nombre}
+            onChangeText={setNombre}
             placeholder="Primer nombre"
           />
         </View>
@@ -72,7 +124,8 @@ const Editar_perfil = () => {
           <Ionicons name="person-outline" size={24} color="#E0E0E0" />
           <TextInput
             style={styles.input}
-            value={user.apellido_cliente}
+            value={apellido}
+            onChangeText={setApellido}
             placeholder="Apellido"
           />
         </View>
@@ -80,7 +133,8 @@ const Editar_perfil = () => {
           <Ionicons name="mail-outline" size={24} color="#E0E0E0" />
           <TextInput
             style={styles.input}
-            value={user.correo_cliente}
+            value={email}
+            onChangeText={setEmail}
             placeholder="Correo electrónico"
           />
         </View>
@@ -88,7 +142,8 @@ const Editar_perfil = () => {
           <Ionicons name="call-outline" size={24} color="#E0E0E0" />
           <TextInput
             style={styles.input}
-            value={user.telefono_cliente}
+            value={telefono}
+            onChangeText={setTelefono}
             placeholder="Teléfono"
           />
         </View>
@@ -96,7 +151,8 @@ const Editar_perfil = () => {
           <Ionicons name="card-outline" size={24} color="#E0E0E0" />
           <TextInput
             style={styles.input}
-            value={user.dui_cliente}
+            value={dui}
+            onChangeText={setDui}
             placeholder="DUI"
           />
         </View>
@@ -104,7 +160,8 @@ const Editar_perfil = () => {
           <Ionicons name="home-outline" size={24} color="#E0E0E0" />
           <TextInput
             style={styles.input}
-            value={user.direccion_cliente}
+            value={direccion}
+            onChangeText={setDireccion}
             placeholder="Dirección"
           />
         </View>
@@ -112,23 +169,22 @@ const Editar_perfil = () => {
           <Ionicons name="calendar-outline" size={24} color="#E0E0E0" />
           <TextInput
             style={styles.input}
-            value={user.nacimiento_cliente}
+            value={nacimiento}
+            onChangeText={setDireccion}
             placeholder="Fecha de nacimiento"
           />
         </View>
       </View>
 
-      <View style={styles.inputContainer}>
-        <TouchableOpacity style={styles.editButton} onPress={() => onEditPress(editableProfileEmail, editableFirstName, editableLastName, editablePhone, editableDUI, editableAddress, editableBirthDate)}>
-          <Ionicons name="create-outline" size={24} color="#E0E0E0" />
-          <Text style={styles.editButtonText}>Guardar Cambios</Text>
-        </TouchableOpacity>
+      <TouchableOpacity style={styles.editButton} onPress={handleUpdate}>
+        <Ionicons name="create-outline" size={24} color="#E0E0E0" />
+        <Text style={styles.editButtonText}>Guardar Cambios</Text>
+      </TouchableOpacity>
 
-        <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-          <Ionicons name="log-out-outline" size={24} color="#E0E0E0" />
-          <Text style={styles.logoutButtonText}>Cerrar sesión</Text>
-        </TouchableOpacity>
-      </View>
+      <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+        <Ionicons name="log-out-outline" size={24} color="#E0E0E0" />
+        <Text style={styles.logoutButtonText}>Cerrar sesión</Text>
+      </TouchableOpacity>
     </View>
   );
 };
