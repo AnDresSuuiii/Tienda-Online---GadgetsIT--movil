@@ -14,7 +14,7 @@ const Productos = ({ route, navigation }) => {
             console.error('idMarca o idCategoria no se pasaron correctamente a Productos');
             return;
         }
-        obtenerProductos();  // Llama a la función para obtener productos
+        obtenerProductos();  
     }, [idMarca, idCategoria]);
 
     const obtenerProductos = async () => {
@@ -53,7 +53,7 @@ const Productos = ({ route, navigation }) => {
     };
 
     const handleCardPress = (idProducto) => {
-        navigation.navigate("ProductoDetalle", { idProducto });  // Navega a los detalles del producto seleccionado
+        navigation.navigate("ProductoDetalle", { idProducto });  
     };
 
     return (
@@ -64,7 +64,7 @@ const Productos = ({ route, navigation }) => {
             <ScrollView contentContainerStyle={styles.cardsContainer}>
                 {productos.map((producto) => (
                     <BrandCard
-                        key={producto.id_producto}  // Clave única para cada producto
+                        key={producto.id_producto} 
                         brandName={producto.nombre_producto}
                         brandLogo={{ uri: `${Constantes.IP}/Tienda-Online---GadgetsIT/api/images/productos/${producto.imagen_producto}` }}
                         onPress={() => handleCardPress(producto.id_producto)}
@@ -75,7 +75,7 @@ const Productos = ({ route, navigation }) => {
     );
 };
 
-const styles = StyleSheet.create({  // Estilos para los componentes utilizados
+const styles = StyleSheet.create({  
     container: {
         flex: 1,
         backgroundColor: "#151515",
@@ -96,4 +96,4 @@ const styles = StyleSheet.create({  // Estilos para los componentes utilizados
     },
 });
 
-export default Productos;  // Exportación del componente para su uso en otros lugares de la aplicación
+export default Productos;  

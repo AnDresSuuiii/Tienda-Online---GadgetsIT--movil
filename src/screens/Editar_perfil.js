@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, Alert, Scro
 import { Ionicons } from '@expo/vector-icons';  // Importa íconos de Ionicons para mejorar la interfaz visual
 import * as Constantes from '../utils/constantes';  // Importa constantes, generalmente configuraciones como la dirección IP del servidor
 
-const Editar_perfil = () => {
+const Editar_perfil = ({navigation}) => {
   const ip = Constantes.IP;  // Dirección IP del servidor almacenada en las constantes
   const [user, setUser] = useState({});  // Estado para almacenar los datos del usuario
 
