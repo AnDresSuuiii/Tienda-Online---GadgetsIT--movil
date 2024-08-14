@@ -18,6 +18,7 @@ const ProductoDetalle = ({ route, navigation }) => {
             return;
         }
         obtenerProducto();
+        obtenerProducto();
     }, [idProducto]);
  
     const obtenerProducto = async () => {
