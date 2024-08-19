@@ -1,18 +1,26 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 
 const Recuperacion_codigo = ({
     navigation,
+    route,
     titleText = "GADGETSIT",
     subtitleText = "Recuperar cuenta",
-    codePlaceholder = "Codigo de verificación",
+    codePlaceholder = "Código de verificación",
     continueButtonText = "Enviar",
 }) => {
-    const [email, setEmail] = useState('');
+    const [inputCode, setInputCode] = useState('');
+    const { verificationCode, email } = route.params; // Recibe el código de verificación y el correo del parámetro
 
     const handleRecover = () => {
-        // Lógica para recuperar la cuenta
-        navigation.navigate('Recuperacion_contraseña');
+        if (inputCode === verificationCode) {
+            Alert.alert("Éxito", "Código verificado correctamente.");
+            Alert.alert(email);
+            // Navega a la pantalla de recuperación de contraseña, pasando el correo como parámetro
+            navigation.navigate('Recuperacion_contraseña', { email: email });
+        } else {
+            Alert.alert("Error", "El código ingresado no es correcto. Por favor, inténtalo de nuevo.");
+        }
     };
 
     return (
@@ -23,8 +31,9 @@ const Recuperacion_codigo = ({
                 style={styles.input}
                 placeholder={codePlaceholder}
                 placeholderTextColor="#777"
-                value={email}
-                onChangeText={setEmail}
+                value={inputCode}
+                onChangeText={setInputCode}
+                keyboardType="numeric" 
             />
             <TouchableOpacity style={styles.continueButton} onPress={handleRecover}>
                 <Text style={styles.continueButtonText}>{continueButtonText}</Text>
