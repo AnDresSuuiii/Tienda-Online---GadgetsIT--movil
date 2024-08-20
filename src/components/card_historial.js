@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
-const card_historial = ({ price, date, onDetailPress }) => {
+const OrderCard = ({ price, date, productName, productImage, quantity, onDetailPress }) => {
+  const [showDetails, setShowDetails] = useState(false);
+
   return (
     <View style={styles.card}>
       <View style={styles.cardHeader}>
@@ -11,11 +13,21 @@ const card_historial = ({ price, date, onDetailPress }) => {
       <View style={styles.cardBody}>
         <Ionicons name="cart-outline" size={24} color="white" />
         <Text style={styles.price}>${price}</Text>
-        <TouchableOpacity style={styles.detailButton} onPress={onDetailPress}>
-          <Ionicons name="chevron-down-outline" size={16} color="black" />
-          <Text style={styles.detailButtonText}>Ver detalle</Text>
+        <TouchableOpacity 
+          style={styles.detailButton} 
+          onPress={() => setShowDetails(!showDetails)}
+        >
+          <Ionicons name={showDetails ? "chevron-up-outline" : "chevron-down-outline"} size={16} color="black" />
+          <Text style={styles.detailButtonText}>{showDetails ? 'Ocultar detalles' : 'Ver detalle'}</Text>
         </TouchableOpacity>
       </View>
+      {showDetails && (
+        <View style={styles.detailsContainer}>
+          <Text style={styles.detailText}>Producto: {productName}</Text>
+          <Text style={styles.detailText}>Cantidad: {quantity}</Text>
+          <Text style={styles.detailText}>Precio total: ${price}</Text>
+        </View>
+      )}
     </View>
   );
 };
@@ -40,10 +52,6 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 18,
     fontWeight: 'bold',
-  },
-  date: {
-    color: 'white',
-    fontSize: 14,
   },
   cardBody: {
     flexDirection: 'row',
@@ -70,6 +78,16 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 14,
   },
+  detailsContainer: {
+    marginTop: 10,
+    backgroundColor: '#2c2c2c',
+    padding: 10,
+    borderRadius: 8,
+  },
+  detailText: {
+    color: 'white',
+    fontSize: 14,
+  },
 });
 
-export default card_historial;
+export default OrderCard;

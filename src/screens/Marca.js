@@ -1,20 +1,20 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, SafeAreaView, Text, ScrollView, Alert } from "react-native";
-import Header from "../components/Header"; // Componente personalizado para el encabezado
-import Search from "../components/Search"; // Componente personalizado para la búsqueda
-import BrandCard from "../components/cards"; // Componente personalizado para las tarjetas de marcas
-import * as Constantes from '../utils/constantes'; // Constantes, típicamente para configuraciones globales como la dirección IP
+import { StyleSheet, SafeAreaView, Text, ScrollView, Alert, ActivityIndicator, View } from "react-native";
+import Header from "../components/Header";
+import Search from "../components/Search";
+import BrandCard from "../components/cards";
+import * as Constantes from '../utils/constantes';
 
 const Marca = ({ navigation }) => {
-    const ip = Constantes.IP; // Dirección IP del servidor
-    const [marcas, setMarcas] = useState([]); // Estado para almacenar las marcas obtenidas de la API
+    const ip = Constantes.IP;
+    const [marcas, setMarcas] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [searchTerm, setSearchTerm] = useState("");
 
-    // Efecto para cargar las marcas al montar el componente
     useEffect(() => {
         getMarcas();
     }, []);
 
-    // Función para obtener marcas desde el servidor
     const getMarcas = async () => {
         try {
             const response = await fetch(`${ip}/Tienda-Online---GadgetsIT/api/services/public/marca.php?action=readAll`, {
@@ -22,42 +22,65 @@ const Marca = ({ navigation }) => {
             });
             const data = await response.json();
             if (data.status) {
-                setMarcas(data.dataset); // Actualiza el estado de marcas si la petición es exitosa
+                setMarcas(data.dataset);
             } else {
-                console.error('Error al obtener marcas:', data.error);
                 Alert.alert('Error', 'No se pudieron cargar las marcas');
             }
         } catch (error) {
-            console.error('Error desde Catch:', error);
             Alert.alert('Error', 'Ocurrió un error al conectar con el servidor');
+        } finally {
+            setLoading(false);
         }
     };
 
-    // Función para manejar la selección de una marca
     const handleCardPress = (idMarca) => {
-        navigation.navigate("Productos", { idMarca }); // Navega a la pantalla de productos asociados a la marca
+        navigation.navigate("Productos", { idMarca });
     };
+
+    const filteredMarcas = marcas.filter(marca =>
+        marca.nombre_marca.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
     return (
         <SafeAreaView style={styles.container}>
-            <Header headerText="Hola, Andrés" headerIcon="shopping-cart" onIconPress={() => navigation.navigate("Carrito")} />
-            <Search icon="search" placeholder="Apple Watch, Macbook Pro, ..." />
+            <Header 
+                headerText="Hola, Bienvenido" 
+                headerIcon="shopping-cart" 
+                onIconPress={() => navigation.navigate("Carrito")} 
+            />
+            <Search 
+                icon="search" 
+                placeholder="Apple Watch, Macbook Pro, ..." 
+                value={searchTerm}
+                onChangeText={setSearchTerm}
+                onClear={() => setSearchTerm('')}
+            />
             <Text style={styles.title}>Marcas</Text>
-            <ScrollView contentContainerStyle={styles.cardsContainer}>
-                {marcas.map(marca => (
-                    <BrandCard
-                        key={marca.id_marca} // Asegura que cada tarjeta tenga una clave única
-                        brandName={marca.nombre_marca}
-                        brandLogo={{ uri: `${ip}${'/Tienda-Online---GadgetsIT/api/images/marcas/'}${marca.imagen_marca}` }}
-                        onPress={() => handleCardPress(marca.id_marca)}
-                    />
-                ))}
-            </ScrollView>
+            {loading ? (
+                <View style={styles.loadingContainer}>
+                    <ActivityIndicator size="large" color="#fff" />
+                    <Text style={styles.loadingText}>Cargando marcas...</Text>
+                </View>
+            ) : (
+                <ScrollView contentContainerStyle={styles.cardsContainer}>
+                    {filteredMarcas.length > 0 ? (
+                        filteredMarcas.map(marca => (
+                            <BrandCard
+                                key={marca.id_marca}
+                                brandName={marca.nombre_marca}
+                                brandLogo={{ uri: `${ip}${'/Tienda-Online---GadgetsIT/api/images/marcas/'}${marca.imagen_marca}` }}
+                                onPress={() => handleCardPress(marca.id_marca)}
+                            />
+                        ))
+                    ) : (
+                        <Text style={styles.noResultsText}>No se encontraron marcas.</Text>
+                    )}
+                </ScrollView>
+            )}
         </SafeAreaView>
     );
 };
 
-// Estilos para los componentes usados en Marca
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -70,13 +93,31 @@ const styles = StyleSheet.create({
         fontSize: 22,
         letterSpacing: 0.5,
         fontWeight: 'bold',
-        marginVertical: 16,
+        marginVertical: 10,
+        paddingHorizontal: 20,
     },
     cardsContainer: {
         flexDirection: 'row',
         flexWrap: 'wrap',
         justifyContent: 'center',
+        paddingBottom: 16,
+    },
+    loadingContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    loadingText: {
+        color: "#fff",
+        marginTop: 8,
+        fontSize: 16,
+    },
+    noResultsText: {
+        color: "#fff",
+        textAlign: 'center',
+        marginTop: 16,
+        fontSize: 16,
     },
 });
 
-export default Marca; // Exporta el componente para su uso en otros lugares de la aplicación
+export default Marca;

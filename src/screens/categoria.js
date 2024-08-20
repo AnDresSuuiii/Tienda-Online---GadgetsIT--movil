@@ -66,7 +66,8 @@ const styles = StyleSheet.create({ // Estilos para los componentes de React Nati
         fontSize: 22,
         letterSpacing: 0.5,
         fontWeight: 'bold',
-        marginVertical: 16,
+        marginVertical: 10,
+        paddingHorizontal: 20,
     },
     cardsContainer: {
         flexDirection: 'row',

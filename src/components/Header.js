@@ -6,7 +6,7 @@ const Header = ({ headerText, headerIcon, onIconPress }) => {
     return (
         <View style={styles.container}>
             <Text style={styles.headerText}>{headerText}</Text>
-            <TouchableOpacity onPress={onIconPress}>
+            <TouchableOpacity onPress={onIconPress} style={styles.iconContainer}>
                 <FontAwesome name={headerIcon} size={24} color="#fff" style={styles.icon} />
             </TouchableOpacity>
         </View>
@@ -17,16 +17,21 @@ const styles = StyleSheet.create({
     container: {
         flexDirection: "row",
         alignItems: "center",
+        justifyContent: "space-between", // Para que el texto esté a la izquierda y el ícono a la derecha
         paddingVertical: 16,
+        paddingHorizontal: 20, // Agregar un poco de padding horizontal
+        backgroundColor: "#1c1c1c", // Fondo del header más oscuro
     },
     headerText: {
-        flex: 1,
-        fontSize: 19,
-        marginTop: 32,
-        color: "#fff", // Cambia el color del texto a blanco
+        fontSize: 20, // Tamaño del texto un poco más grande para mejor visibilidad
+        color: "#fff",
+        fontWeight: "600", // Fuente más gruesa para un look más fuerte
+    },
+    iconContainer: {
+        padding: 8, // Agregar padding alrededor del ícono para hacerlo más táctil
     },
     icon: {
-        marginTop: 32,
+        marginRight: 5, // Pequeño margen a la derecha del ícono
     },
 });
 
